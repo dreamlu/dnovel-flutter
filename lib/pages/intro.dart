@@ -1,5 +1,6 @@
 import 'package:dnovel_flutter/models/Shelf.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import './read.dart';
@@ -204,7 +205,7 @@ class _IntroPageState extends State<IntroPage> {
             padding: EdgeInsets.only(bottom: 10.0),
             child: Text('简介', style: TextStyle(fontSize: 18.0)),
           ),
-          Text(_intro.bookDesc, softWrap: true),
+          Html(data: _intro.bookDesc),
         ],
       ),
     );

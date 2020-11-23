@@ -1,3 +1,4 @@
+import 'package:dnovel_flutter/utils/exit.dart';
 import 'package:flutter/material.dart';
 import './intro.dart';
 import '../models/Classify.dart';
@@ -27,19 +28,21 @@ class _ClassifyPageState extends State<ClassifyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: Container(
-        color: MyColor.bgColor,
-        child: Row(children: [
-          _buildClassifyList(),
-          _buildNovelList(),
-        ]),
-      ),
-      bottomNavigationBar: MyBottomAppBar(
-        currentIndex: 1,
-      ),
-    );
+    return WillPopScope(
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          body: Container(
+            color: MyColor.bgColor,
+            child: Row(children: [
+              _buildClassifyList(),
+              _buildNovelList(),
+            ]),
+          ),
+          bottomNavigationBar: MyBottomAppBar(
+            currentIndex: 1,
+          ),
+        ),
+        onWillPop: Exit.isExit);
   }
 
   Widget _buildAppBar() {

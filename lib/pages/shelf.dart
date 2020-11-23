@@ -1,3 +1,4 @@
+import 'package:dnovel_flutter/utils/exit.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -39,16 +40,18 @@ class _ShelfPageState extends State<ShelfPage> {
       }
     }
 
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: Container(
-        color: MyColor.bgColor,
-        child: content,
-      ),
-      bottomNavigationBar: MyBottomAppBar(
-        currentIndex: 0,
-      ),
-    );
+    return WillPopScope(
+        child: Scaffold(
+          appBar: _buildAppBar(),
+          body: Container(
+            color: MyColor.bgColor,
+            child: content,
+          ),
+          bottomNavigationBar: MyBottomAppBar(
+            currentIndex: 0,
+          ),
+        ),
+        onWillPop: Exit.isExit);
   }
 
   Widget _buildAppBar() {
