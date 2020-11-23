@@ -14,8 +14,8 @@ import '../components/ChapterDrawer.dart';
 Map bgColors = {
   'daytime': Colors.white24, // 白天
   'night': Colors.black45, // 黑夜
-  'parchment': Color.fromRGBO(242, 235, 217, 100), // 羊皮纸
-  'eyeshield': Color.fromRGBO(199, 237, 204, 100), // 护眼
+  'parchment': Color.fromRGBO(242, 235, 217, 1), // 羊皮纸
+  'my_love': Color.fromRGBO(196, 179, 149, 0.5), // 护眼
 };
 
 class ReadPage extends StatefulWidget {
@@ -39,13 +39,14 @@ class ReadPage extends StatefulWidget {
   State createState() => _ReadPageState();
 }
 
+// 沉浸式页面
 class _ReadPageState extends State<ReadPage> {
   List<Chapter> _chapterList = [];
   Detail _detail; // 小说内容：标题、内容、上一章url、下一章url
 
   // 阅读设置
   double _fontSize = 20.0; // 字体
-  String _bgColor = 'daytime'; // 背景颜色
+  String _bgColor = 'mylove'; // 背景颜色
   bool _whetherNight = false; // 是否是黑夜
   ScrollController _controller; // 滚动条对象
 
@@ -82,17 +83,7 @@ class _ReadPageState extends State<ReadPage> {
     return WillPopScope(
       child: SafeArea(
         child: Scaffold(
-          body: Container(
-            color: bgColors[_bgColor],
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 30),
-                _buildHeader(),
-                content,
-                _buildFooter(),
-              ],
-            ),
-          ),
+          body: _buildColorContent(content),
           drawer: ChapterDrawer(
             bookName: widget.bookName,
             title: _detail != null ? _detail.title : '',
@@ -115,6 +106,41 @@ class _ReadPageState extends State<ReadPage> {
     );
   }
 
+  // 构建带颜色的阅读页
+  Widget _buildColorContent(content) {
+    if (_bgColor == "my_love") {
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/images/read_background.jpg'),
+            fit: BoxFit.cover, // 全屏
+          ),
+        ),
+        // color: bgColors[_bgColor],
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 15),
+            _buildHeader(),
+            content,
+            _buildFooter(),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      color: bgColors[_bgColor],
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 15),
+          _buildHeader(),
+          content,
+          _buildFooter(),
+        ],
+      ),
+    );
+  }
+
   void _showJoinBottomSheet() async {
     // 从小说详情页面进入的阅读页面，当返回上一页面时
     // 弹出对话框询问是否加入书架
@@ -129,24 +155,25 @@ class _ReadPageState extends State<ReadPage> {
   Widget _buildHeader() {
     return Container(
       margin: EdgeInsets.only(bottom: 10.0),
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.black26)),
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border(bottom: BorderSide(color: Colors.black26)),
+      // ),
       alignment: Alignment.center,
-      height: 30.0,
+      height: 20.0,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           GestureDetector(
             child: Icon(Icons.chevron_left),
-            // onTap: () {
-            //   if (widget.fromPage == 'ShelfPage') {
-            //     Navigator.pushNamedAndRemoveUntil(
-            //         context, '/shelf', (Route<dynamic> route) => false);
-            //   } else {
-            //     _showJoinBottomSheet();
-            //   }
-            // },
+            onTap: () {
+              // if (widget.fromPage == 'ShelfPage') {
+              //   Navigator.pushNamedAndRemoveUntil(
+              //       context, '/shelf', (Route<dynamic> route) => false);
+              // } else {
+              //   _showJoinBottomSheet();
+              // }
+              Navigator.pop(context);
+            },
           ),
           Text(_detail != null ? _detail.title : ''),
         ],
@@ -164,7 +191,8 @@ class _ReadPageState extends State<ReadPage> {
               Html(
                 data: _detail.content,
                 style: {
-                  "html": Style(fontSize: FontSize(_fontSize)),
+                  "html":
+                      Style(fontSize: FontSize(_fontSize), letterSpacing: 0.2),
                 },
               ),
             ],
@@ -342,10 +370,10 @@ class _ReadPageState extends State<ReadPage> {
                 },
               ),
               BgColorItem(
-                color: bgColors['eyeshield'],
+                color: bgColors['my_love'],
                 onTap: () {
                   setState(() {
-                    _bgColor = 'eyeshield';
+                    _bgColor = 'my_love';
                   });
                 },
               ),

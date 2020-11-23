@@ -6,6 +6,7 @@ import './pages/search.dart';
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     title: '梦阅',
     initialRoute: '/',
     routes: {

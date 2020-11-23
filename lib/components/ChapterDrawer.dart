@@ -52,7 +52,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
       height: 30.0,
       alignment: Alignment.centerLeft,
       child: Text(
-        widget.bookName + '（共' + _all.length.toString() + '章）',
+        widget.bookName + '(共' + _all.length.toString() + '章)',
         style: TextStyle(
           fontSize: 20.0,
           color: Colors.black87,
@@ -66,7 +66,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
 
     content.add(FlatButton(
       child: Text(
-        _whetherShowBigPage ? '切换小分页' : '切换大分页（${_bigPage.desc}）',
+        _whetherShowBigPage ? '切换小分页' : '切换大分页(${_bigPage.desc})',
         style: TextStyle(fontSize: 16.0, color: Colors.black54),
       ),
       onPressed: () {
