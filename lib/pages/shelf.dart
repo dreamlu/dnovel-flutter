@@ -1,3 +1,4 @@
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dnovel_flutter/utils/exit.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -161,7 +162,11 @@ class _ShelfPageState extends State<ShelfPage> {
     if (novel.bookCoverUrl == null || novel.bookCoverUrl == "") {
       img = Image.asset("lib/images/cover.png");
     } else {
-      img = Image.network(novel.bookCoverUrl);
+      try {
+        img = Image.network(novel.bookCoverUrl);// CachedNetworkImage(imageUrl: novel.bookCoverUrl); //Image.network(novel.bookCoverUrl);
+      } catch (e) {
+        img = Image.asset("lib/images/cover.png");
+      }
     }
     content.add(
       // NovelItem(bookName: novel.bookName, authorName: novel.authorName),

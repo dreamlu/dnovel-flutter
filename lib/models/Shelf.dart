@@ -42,10 +42,11 @@ class Shelf {
         'recent_chapter_url': recentChapterUrl,
         'source': source,
         "detail_url": detailUrl,
+        "book_cover_url": bookCoverUrl,
       };
 
   static List<Shelf> toList(dynamic stringJson) {
-    if(stringJson == null) {
+    if (stringJson == null) {
       return [];
     }
     var map = jsonDecode(stringJson);
@@ -58,6 +59,7 @@ class Shelf {
         recentChapterUrl: e['recent_chapter_url'],
         source: e['source'],
         detailUrl: e['detail_url'],
+        bookCoverUrl: e['book_cover_url'],
       ));
     });
     return shelfList;

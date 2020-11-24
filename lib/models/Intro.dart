@@ -16,10 +16,11 @@ class Intro {
   String bookName;
   String authorName;
   String classifyName;
-  String lastUpdateAt;
+  String lastUpdateAt; // 最新章节名
   String bookDesc;
   String recentChapterUrl;
   String source;
+  String cover; // 封面
 
   Intro(
       {this.bookName,
@@ -28,7 +29,8 @@ class Intro {
       this.lastUpdateAt,
       this.bookDesc,
       this.recentChapterUrl,
-      this.source});
+      this.source,
+      this.cover});
 
   factory Intro.fromJson(Map<String, dynamic> json) {
     return Intro(
@@ -39,6 +41,7 @@ class Intro {
       bookDesc: json['description'],
       recentChapterUrl: json['url'],
       source: json['source'],
+      cover: json["cover"],
     );
   }
 
@@ -51,6 +54,7 @@ class Intro {
     bookDesc = $bookDesc,
     recentChapterUrl = $recentChapterUrl,
     source = $source,
+    coder = $cover,
     ''';
   }
 }

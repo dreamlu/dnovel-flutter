@@ -172,8 +172,11 @@ class _IntroPageState extends State<IntroPage> {
       height: 180.0,
       alignment: Alignment.center,
       margin: EdgeInsets.symmetric(vertical: 10.0),
-      child:
-          NovelItem(authorName: _intro.authorName, bookName: _intro.bookName),
+      child: NovelItem(
+        authorName: _intro.authorName,
+        bookName: _intro.bookName,
+        cover: _intro.cover,
+      ),
     );
   }
 
@@ -182,11 +185,19 @@ class _IntroPageState extends State<IntroPage> {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.all(20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: ListView(
+        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        shrinkWrap: true,
         children: <Widget>[
-          Text('更新时间：' + _intro.lastUpdateAt),
-          Text('分类：' + _intro.classifyName)
+          Text(
+            '最新章节：' + _intro.lastUpdateAt,
+            overflow: TextOverflow.ellipsis, // 省略号
+            // softWrap: true, // 换行,最大几行
+            // maxLines: 2,
+          ),
+          Text(
+            '分类：' + _intro.classifyName,
+          )
         ],
       ),
     );
@@ -264,6 +275,7 @@ class _IntroPageState extends State<IntroPage> {
       recentChapterUrl: _intro.recentChapterUrl,
       source: _intro.source,
       detailUrl: widget.url,
+      bookCoverUrl: _intro.cover,
     );
   }
 }

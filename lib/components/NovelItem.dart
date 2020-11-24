@@ -3,11 +3,25 @@ import 'package:flutter/material.dart';
 class NovelItem extends StatelessWidget {
   final String bookName;
   final String authorName;
+  final String cover; // 封面
 
-  NovelItem({this.bookName, this.authorName});
+  NovelItem({this.bookName, this.authorName, this.cover});
 
   @override
   Widget build(BuildContext context) {
+    Image img;
+    if (cover == null || cover == "") {
+      img = Image(
+        image: AssetImage("lib/images/cover.png"),
+        fit: BoxFit.cover,
+      );
+    } else {
+      img = Image.network(
+        cover,
+        fit: BoxFit.cover, // 全屏填充
+      );
+    }
+
     return Card(
         elevation: 5.0,
         shape: RoundedRectangleBorder(
@@ -19,10 +33,7 @@ class NovelItem extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              Image(
-                image: AssetImage("lib/images/cover.png"),
-                fit: BoxFit.cover,
-              ),
+              img,
               Align(
                 alignment: Alignment(-0.6, -0.5),
                 child: Padding(
