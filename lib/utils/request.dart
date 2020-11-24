@@ -12,7 +12,7 @@ class HttpUtils {
   static Dio dio;
 
   /// default options
-  static const String API_PREFIX = 'http://xxx/api';
+  static const String API_PREFIX = 'http://dnovel.deercoder.com/api';
   // static const String API_PREFIX = 'http://192.168.31.105:8022';
   static const int CONNECT_TIMEOUT = 50000;
   static const int RECEIVE_TIMEOUT = 3000;
