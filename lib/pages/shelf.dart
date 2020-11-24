@@ -163,7 +163,10 @@ class _ShelfPageState extends State<ShelfPage> {
       img = Image.asset("lib/images/cover.png");
     } else {
       try {
-        img = Image.network(novel.bookCoverUrl);// CachedNetworkImage(imageUrl: novel.bookCoverUrl); //Image.network(novel.bookCoverUrl);
+        img = ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: Image.network(novel.bookCoverUrl),
+        ); // CachedNetworkImage(imageUrl: novel.bookCoverUrl); //Image.network(novel.bookCoverUrl);
       } catch (e) {
         img = Image.asset("lib/images/cover.png");
       }

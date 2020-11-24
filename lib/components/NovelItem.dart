@@ -1,3 +1,4 @@
+import 'package:dnovel_flutter/utils/color.dart';
 import 'package:flutter/material.dart';
 
 class NovelItem extends StatelessWidget {
@@ -9,14 +10,15 @@ class NovelItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Image img;
+    var back;
     if (cover == null || cover == "") {
-      img = Image(
-        image: AssetImage("lib/images/cover.png"),
-        fit: BoxFit.cover,
-      );
+      back = DecoratedBox(
+          // 用装饰容器来绘制背景色, 可以直接用更上层的Container(color: MyColor.bgColor)
+          decoration: BoxDecoration(
+        color: Color.fromRGBO(242, 235, 217, 0.4),
+      )); // 背景色
     } else {
-      img = Image.network(
+      back = Image.network(
         cover,
         fit: BoxFit.cover, // 全屏填充
       );
@@ -33,7 +35,7 @@ class NovelItem extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              img,
+              back,
               Align(
                 alignment: Alignment(-0.6, -0.5),
                 child: Padding(
@@ -42,15 +44,18 @@ class NovelItem extends StatelessWidget {
                     bookName,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 18.0, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500), // 中等加粗
                   ),
                 ),
               ),
               Align(
-                alignment: Alignment(0.2, 0.5),
+                alignment: Alignment(-0.6, 0.7),
                 child: Text(
-                  authorName,
-                  maxLines: 2,
+                  "作者: " + authorName,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 14.0, color: Colors.grey),
                 ),

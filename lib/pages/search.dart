@@ -118,13 +118,13 @@ class _SearchPageState extends State<SearchPage> {
     return Container(
       color: Colors.white,
       margin: EdgeInsets.symmetric(horizontal: 10.0),
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
       child: GridView.count(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        crossAxisCount: 2,
-        mainAxisSpacing: 20.0,
-        crossAxisSpacing: 40.0,
+        crossAxisCount: 3,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
         childAspectRatio: 0.75,
         // 宽 / 高
         padding: EdgeInsets.all(5.0),

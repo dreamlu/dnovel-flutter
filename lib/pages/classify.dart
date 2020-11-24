@@ -104,14 +104,14 @@ class _ClassifyPageState extends State<ClassifyPage> {
   Widget _buildNovelList() {
     Widget content = Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       child: GridView.count(
         crossAxisCount: 2,
-        mainAxisSpacing: 20.0,
+        mainAxisSpacing: 5.0,
         // 垂直间距
-        crossAxisSpacing: 20.0,
+        crossAxisSpacing: 5.0,
         // 水平间距
-        childAspectRatio: 0.75,
+        childAspectRatio: 1.15,
         // 宽 / 高 = 0.7
         children: List.generate(_novelList.length, (index) {
           Novel novel = _novelList[index];
