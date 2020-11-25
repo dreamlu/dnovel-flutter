@@ -1,4 +1,5 @@
 import 'package:dnovel_flutter/models/Shelf.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -189,10 +190,18 @@ class _ReadPageState extends State<ReadPage> {
             controller: _controller,
             children: <Widget>[
               Html(
-                data: _detail.content,
+                data: "<font>" + _detail.content + "</font>",
                 style: {
-                  "html":
-                      Style(fontSize: FontSize(_fontSize), letterSpacing: 0.2),
+                  "html": Style(
+                    fontSize: FontSize(_fontSize),
+                    letterSpacing: 0.2,
+                  ),
+                  "font": Style( // 添加一个标签防止content中没有<p>来进行行高设置
+                    lineHeight: 1.3,
+                  ),
+                  "p": Style(
+                    lineHeight: 1.3,
+                  ),
                 },
               ),
             ],

@@ -8,6 +8,8 @@ dnovel 是一个简洁，干净的小说聚合系统
 
 [前端flutter地址](https://github.com/dreamlu/dnovel-flutter)
 
+[下载体验apk](https://github.com/dreamlu/dnovel-flutter/releases)
+
 长期维护,学习flutter自用  
 
 ### 界面  
