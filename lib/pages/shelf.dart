@@ -194,7 +194,8 @@ class _ShelfPageState extends State<ShelfPage> {
       ));
     }
 
-    return GestureDetector(
+    // 点击涟漪效果
+    return InkWell(
       child: Stack(children: content),
       onTap: () {
         Navigator.push(

@@ -65,15 +65,16 @@ class Shelf {
     return shelfList;
   }
 
-  static Future<bool> isExist(String bookName) async {
+  // 存在则返回对应书籍信息
+  static Future<Shelf> isExist(String bookName) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<Shelf> list = toList(prefs.get("shelfList"));
     for (Shelf s in list) {
       if (s.bookName == bookName) {
-        return true;
+        return s;
       }
     }
-    return false;
+    return null;
   }
 
   // 更新书架阅读的小说阅读的最近章节

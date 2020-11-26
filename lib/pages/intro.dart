@@ -227,14 +227,16 @@ class _IntroPageState extends State<IntroPage> {
       var result = await HttpUtils.getInstance().get(
           '/info?detail_url=${Uri.encodeComponent(widget.url)}&source=${widget.source}');
       IntroModel introResult = IntroModel.fromJson(result.data);
+      _intro = introResult.data;
 
       // 初始化时判断是否在书架
-      if (await Shelf.isExist(introResult.data.bookName)) {
+      // 将书架阅读的最近url覆盖
+      Shelf shelf = await Shelf.isExist(introResult.data.bookName);
+      if (shelf != null) {
         isShelf = 1;
+        _intro.recentChapterUrl = shelf.recentChapterUrl;
       }
-      setState(() {
-        _intro = introResult.data;
-      });
+      setState(() {});
     } catch (e) {
       print(e);
     }

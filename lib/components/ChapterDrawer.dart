@@ -21,6 +21,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
   List<ChapterPagenation> _bigPageList = []; // 大分页列表
   ChapterPagenation _bigPage = new ChapterPagenation(); // 当前大分页
   bool _whetherShowBigPage = false; // 是否显示大分页
+  double _chapterHeight = 40;
 
   ScrollController controller; // 滚动条位置
 
@@ -36,7 +37,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     return Drawer(
       child: Column(
         children: <Widget>[
-          SizedBox(height: 30.0),
+          SizedBox(height: 20.0),
           _buildChapterDrawerHeader(),
           _buildChapterDrawerPageBtn(),
           Divider(),
@@ -48,15 +49,25 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
 
   Widget _buildChapterDrawerHeader() {
     return Container(
-      padding: EdgeInsets.only(left: 20.0),
-      height: 30.0,
+      padding: EdgeInsets.only(left: 15.0),
+      height: 40.0,
       alignment: Alignment.centerLeft,
-      child: Text(
-        widget.bookName + '(共' + _all.length.toString() + '章)',
-        style: TextStyle(
-          fontSize: 20.0,
-          color: Colors.black87,
-        ),
+      child: ListView(
+        children: <Widget>[
+          Text(
+            widget.bookName,
+            style: TextStyle(
+              fontSize: 18.0,
+              color: Colors.black87,
+            ),
+            maxLines: 2,
+          ),
+          SizedBox(height: 5),
+          Text(
+            '共' + _all.length.toString() + '章',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
     );
   }
@@ -161,22 +172,26 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     return Expanded(
       child: ListView.separated(
         controller: controller,
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.only(left: 10.0),
         itemCount: _smallPageList.length,
         separatorBuilder: (BuildContext context, int index) => Divider(),
         itemBuilder: (BuildContext context, int index) {
           Chapter _page = _smallPageList[index];
-          return ListTile(
-            title: Text(_page.name,
-                style: TextStyle(
+          return SizedBox(
+            height: _chapterHeight,
+            child: ListTile(
+              title: Text(_page.name,
+                  style: TextStyle(
                     color: widget.title?.trim() == _page.name.trim()
                         ? Colors.red
-                        : Colors.black54)),
-            contentPadding: EdgeInsets.zero,
-            onTap: () {
-              Navigator.of(context).pop();
-              widget.onTap(_page.url);
-            },
+                        : Colors.black54,
+                  )),
+              contentPadding: EdgeInsets.zero,
+              onTap: () {
+                Navigator.of(context).pop();
+                widget.onTap(_page.url);
+              },
+            ),
           );
         },
       ),
@@ -187,8 +202,8 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     await _initPaging();
     int index = _smallPageList
         .indexWhere((Chapter item) => item.name.trim() == widget.title.trim());
-    // ListTile 每行高度 72.0
-    controller.jumpTo(72.0 * index);
+    // ListTile 每行高度默认 72.0
+    controller.jumpTo(_chapterHeight * index);
   }
 
   _initPaging() {
@@ -227,8 +242,8 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     );
     page.add(cPage);
 
-    int pageIndex = page.indexWhere(
-        (ChapterPagenation item) => item.start <= index && item.end >= index);
+    int pageIndex = page.indexWhere((ChapterPagenation item) =>
+        item.start <= index + 1 && item.end >= index + 1);
     ChapterPagenation currentBigPage = page[pageIndex];
     List<Chapter> list =
         chapterList.sublist(currentBigPage.start, currentBigPage.end);
