@@ -1,4 +1,5 @@
 import 'package:dnovel_flutter/models/Shelf.dart';
+import 'package:dnovel_flutter/service/ChapterService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,6 +54,7 @@ class _ReadPageState extends State<ReadPage> {
 
   @override
   void initState() {
+    ChapterService.init();
     _fetchDetail(widget.url);
     _fetchChapterList(widget.detailUrl, widget.source);
     _initData();
@@ -176,7 +178,10 @@ class _ReadPageState extends State<ReadPage> {
               Navigator.pop(context);
             },
           ),
-          Text(_detail != null ? _detail.title : ''),
+          Text(
+            _detail != null ? _detail.title : '',
+            overflow: TextOverflow.ellipsis,
+          ),
         ],
       ),
     );
@@ -196,7 +201,8 @@ class _ReadPageState extends State<ReadPage> {
                     fontSize: FontSize(_fontSize),
                     letterSpacing: 0.2,
                   ),
-                  "font": Style( // 添加一个标签防止content中没有<p>来进行行高设置
+                  "font": Style(
+                    // 添加一个标签防止content中没有<p>来进行行高设置
                     lineHeight: 1.3,
                   ),
                   "p": Style(
@@ -224,36 +230,42 @@ class _ReadPageState extends State<ReadPage> {
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: Colors.black26)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Flex(
+        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+        direction: Axis.horizontal,
         children: <Widget>[
-          FlatButton(
-            child: Text('上一章', style: TextStyle(color: Colors.black54)),
-            onPressed: () {
-              if (_detail.prevUrl == null ||
-                  _detail.prevUrl == '' ||
-                  _detail.prevUrl.contains('.html') == false) {
-                DialogUtils.showToastDialog(context, text: '当前是第一章了哦~');
-                return;
-              }
-              _fetchDetail(_detail.prevUrl, post: () {
-                _controller = new ScrollController(initialScrollOffset: 0.0);
-              });
-            },
+          Expanded(
+            child: FlatButton(
+              // padding: EdgeInsets.all(0),
+              child: Text('上一章', style: TextStyle(color: Colors.black54)),
+              onPressed: () {
+                if (_detail.prevUrl == null ||
+                    _detail.prevUrl == '' ||
+                    _detail.prevUrl.contains('.html') == false) {
+                  DialogUtils.showToastDialog(context, text: '当前是第一章了哦~');
+                  return;
+                }
+                _fetchDetail(_detail.prevUrl, post: () {
+                  _controller = new ScrollController(initialScrollOffset: 0.0);
+                });
+              },
+            ),
           ),
-          FlatButton(
-            child: Text('下一章', style: TextStyle(color: Colors.black54)),
-            onPressed: () {
-              if (_detail.nextUrl == null ||
-                  _detail.nextUrl == '' ||
-                  _detail.nextUrl.contains('.html') == false) {
-                DialogUtils.showToastDialog(context, text: '已经是最新章节了哦~');
-                return;
-              }
-              _fetchDetail(_detail.nextUrl, post: () {
-                _controller = new ScrollController(initialScrollOffset: 0.0);
-              });
-            },
+          Expanded(
+            child: FlatButton(
+              child: Text('下一章', style: TextStyle(color: Colors.black54)),
+              onPressed: () {
+                if (_detail.nextUrl == null ||
+                    _detail.nextUrl == '' ||
+                    _detail.nextUrl.contains('.html') == false) {
+                  DialogUtils.showToastDialog(context, text: '已经是最新章节了哦~');
+                  return;
+                }
+                _fetchDetail(_detail.nextUrl, post: () {
+                  _controller = new ScrollController(initialScrollOffset: 0.0);
+                });
+              },
+            ),
           ),
         ],
       ),
@@ -264,50 +276,57 @@ class _ReadPageState extends State<ReadPage> {
     return Container(
       height: 90,
       padding: EdgeInsets.symmetric(vertical: 20.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Flex(
+        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+        direction: Axis.horizontal,
         children: <Widget>[
-          MenuItem(
-            children: <Widget>[
-              Icon(Icons.import_contacts),
-              Text('目录'),
-            ],
-            onTap: () {
-              Navigator.pop(context);
-              Scaffold.of(ctx).openDrawer();
-            },
+          Expanded(
+            child: MenuItem(
+              children: <Widget>[
+                Icon(Icons.library_books),
+                Text('目录'),
+              ],
+              onTap: () {
+                Navigator.pop(context);
+                Scaffold.of(ctx).openDrawer();
+              },
+            ),
           ),
-          MenuItem(
-            children: <Widget>[
-              Icon(Icons.settings),
-              Text('设置'),
-            ],
-            onTap: () async {
-              Navigator.pop(context);
-              await showModalBottomSheet(
-                  context: context,
-                  builder: (ctx2) => _buildSettingsBottomSheet());
+          Expanded(
+            child: MenuItem(
+              children: <Widget>[
+                Icon(Icons.settings),
+                Text('设置'),
+              ],
+              onTap: () async {
+                Navigator.pop(context);
+                await showModalBottomSheet(
+                    context: context,
+                    builder: (ctx2) => _buildSettingsBottomSheet());
 
-              // 将字体大小、背景颜色保存到本地缓存中
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.setDouble('fontSize', _fontSize);
-              prefs.setString('bgColor', _bgColor);
-            },
+                // 将字体大小、背景颜色保存到本地缓存中
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setDouble('fontSize', _fontSize);
+                prefs.setString('bgColor', _bgColor);
+              },
+            ),
           ),
-          MenuItem(
-            children: <Widget>[
-              Icon(_whetherNight == true
-                  ? Icons.brightness_7
-                  : Icons.brightness_2),
-              Text(_whetherNight == true ? '白天' : '黑夜'),
-            ],
-            onTap: () {
-              setState(() {
-                _bgColor = _whetherNight ? 'daytime' : 'night';
-                _whetherNight = !_whetherNight;
-              });
-            },
-          )
+          Expanded(
+            child: MenuItem(
+              children: <Widget>[
+                Icon(_whetherNight == true
+                    ? Icons.brightness_7
+                    : Icons.brightness_2),
+                Text(_whetherNight == true ? '白天' : '黑夜'),
+              ],
+              onTap: () {
+                setState(() {
+                  _bgColor = _whetherNight ? 'daytime' : 'night';
+                  _whetherNight = !_whetherNight;
+                });
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -466,18 +485,34 @@ class _ReadPageState extends State<ReadPage> {
   }
 
   _fetchDetail(String url, {Function post}) async {
+    Detail oldDetail = _detail;
     setState(() {
       _detail = null;
     });
 
     try {
-      var result = await HttpUtils.getInstance().get(
-          '/read?chapter_url=${Uri.encodeComponent(url)}&source=${widget.source}');
-      DetailModel detailResult = DetailModel.fromJson(result.data);
+      _detail =
+          await ChapterService.getNextChapter(oldDetail, url, widget.source);
 
-      setState(() {
-        _detail = detailResult.data;
-      });
+      // 提前加载章节,页面销毁释放
+      // 缓存
+      // Future(() =>{
+      //
+      // });
+      if (_detail != null && _chapterList.length > 0) {
+        ChapterService.cache(
+            ChapterService(widget.bookName, widget.source, url, _detail.title),
+            _chapterList);
+      }
+      // var result = await HttpUtils.getInstance().get(
+      //     '/read?chapter_url=${Uri.encodeComponent(url)}&source=${widget.source}');
+      // DetailModel detailResult = DetailModel.fromJson(result.data);
+
+      // setState(() {
+      //   _detail = detailResult.data;
+      // });
+
+      setState(() {});
 
       // 异步存储当前书架书籍阅读进度
       // 提前传递过来判断是否书架更好
@@ -491,12 +526,11 @@ class _ReadPageState extends State<ReadPage> {
     }
   }
 
-  _fetchChapterList(String chapterUrl, String source) async {
+  // 异步加载请求章节列表数据
+  _fetchChapterList(String detailUrl, String source) async {
     try {
-      String url = chapterUrl.substring(0, chapterUrl.lastIndexOf('/'));
-
       var result = await HttpUtils.getInstance().get(
-          '/chapters?detail_url=${Uri.encodeComponent(url)}&source=$source');
+          '/chapters?detail_url=${Uri.encodeComponent(detailUrl)}&source=$source');
       ChapterModel chapterResult = ChapterModel.fromJson(result.data);
 
       setState(() {
