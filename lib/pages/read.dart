@@ -14,7 +14,7 @@ import '../components/LoadingView.dart';
 import '../components/ChapterDrawer.dart';
 
 Map bgColors = {
-  'daytime': Colors.white24, // 白天
+  'daytime': null, // 白天,默认无颜色
   'night': Colors.black45, // 黑夜
   'parchment': Color.fromRGBO(242, 235, 217, 1), // 羊皮纸
   'my_love': Color.fromRGBO(196, 179, 149, 0.5), // 护眼
@@ -48,7 +48,8 @@ class _ReadPageState extends State<ReadPage> {
 
   // 阅读设置
   double _fontSize = 20.0; // 字体
-  String _bgColor = 'mylove'; // 背景颜色
+  String _bgColor = 'my_love'; // 字体背景颜色
+  String _backColor = 'daytime'; // 整体背景颜色
   bool _whetherNight = false; // 是否是黑夜
   ScrollController _controller; // 滚动条对象
 
@@ -111,6 +112,8 @@ class _ReadPageState extends State<ReadPage> {
 
   // 构建带颜色的阅读页
   Widget _buildColorContent(content) {
+
+    var backColor = bgColors[_backColor];
     if (_bgColor == "my_love") {
       return Container(
         decoration: BoxDecoration(
@@ -120,6 +123,24 @@ class _ReadPageState extends State<ReadPage> {
           ),
         ),
         // color: bgColors[_bgColor],
+        child: Container(
+          color: backColor,
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 15),
+              _buildHeader(),
+              content,
+              _buildFooter(),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      color: bgColors[_bgColor],
+      child: Container(
+        color: backColor,
         child: Column(
           children: <Widget>[
             SizedBox(height: 15),
@@ -128,18 +149,6 @@ class _ReadPageState extends State<ReadPage> {
             _buildFooter(),
           ],
         ),
-      );
-    }
-
-    return Container(
-      color: bgColors[_bgColor],
-      child: Column(
-        children: <Widget>[
-          SizedBox(height: 15),
-          _buildHeader(),
-          content,
-          _buildFooter(),
-        ],
       ),
     );
   }
@@ -321,7 +330,7 @@ class _ReadPageState extends State<ReadPage> {
               ],
               onTap: () {
                 setState(() {
-                  _bgColor = _whetherNight ? 'daytime' : 'night';
+                  _backColor = _whetherNight ? 'daytime' : 'night';
                   _whetherNight = !_whetherNight;
                 });
               },
@@ -494,23 +503,13 @@ class _ReadPageState extends State<ReadPage> {
       _detail =
           await ChapterService.getNextChapter(oldDetail, url, widget.source);
 
-      // 提前加载章节,页面销毁释放
+      // 提前加载章节
       // 缓存
-      // Future(() =>{
-      //
-      // });
       if (_detail != null && _chapterList.length > 0) {
         ChapterService.cache(
             ChapterService(widget.bookName, widget.source, url, _detail.title),
             _chapterList);
       }
-      // var result = await HttpUtils.getInstance().get(
-      //     '/read?chapter_url=${Uri.encodeComponent(url)}&source=${widget.source}');
-      // DetailModel detailResult = DetailModel.fromJson(result.data);
-
-      // setState(() {
-      //   _detail = detailResult.data;
-      // });
 
       setState(() {});
 
@@ -544,13 +543,15 @@ class _ReadPageState extends State<ReadPage> {
   _initData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     double fontSize = prefs.getDouble('fontSize') ?? 20.0;
-    String bgColor = prefs.getString('bgColor') ?? 'daytime';
+    String bgColor = prefs.getString('bgColor') ?? 'my_love';
+    String backColor = prefs.getString('backColor') ?? 'daytime';
     double currPos =
         prefs.getDouble(widget.shelfId.toString() + 'currPos') ?? 0.0;
     _controller = new ScrollController(initialScrollOffset: currPos);
     setState(() {
       _fontSize = fontSize;
       _bgColor = bgColor;
+      _backColor = backColor;
     });
   }
 

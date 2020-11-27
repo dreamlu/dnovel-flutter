@@ -174,7 +174,8 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
         controller: controller,
         padding: const EdgeInsets.only(left: 10.0),
         itemCount: _smallPageList.length,
-        separatorBuilder: (BuildContext context, int index) => Divider(),
+        separatorBuilder: (BuildContext context, int index) =>
+            Divider(height: 10),
         itemBuilder: (BuildContext context, int index) {
           Chapter _page = _smallPageList[index];
           return SizedBox(
@@ -203,7 +204,11 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     int index = _smallPageList
         .indexWhere((Chapter item) => item.name.trim() == widget.title.trim());
     // ListTile 每行高度默认 72.0
-    controller.jumpTo(_chapterHeight * index);
+    double value = (_chapterHeight + 10) * index - 260; // 尽量居中显示
+    if (value < 0) {
+      value = 0;
+    }
+    controller.jumpTo(value);
   }
 
   _initPaging() {

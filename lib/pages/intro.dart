@@ -229,6 +229,11 @@ class _IntroPageState extends State<IntroPage> {
       IntroModel introResult = IntroModel.fromJson(result.data);
       _intro = introResult.data;
 
+      // 如果没有第一章,则直接从最新章节开始
+      if(_intro.firstUrl != ''){
+        _intro.recentChapterUrl = _intro.firstUrl;
+      }
+
       // 初始化时判断是否在书架
       // 将书架阅读的最近url覆盖
       Shelf shelf = await Shelf.isExist(introResult.data.bookName);
