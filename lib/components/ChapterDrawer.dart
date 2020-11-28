@@ -172,7 +172,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     return Expanded(
       child: ListView.separated(
         controller: controller,
-        padding: const EdgeInsets.only(left: 10.0),
+        padding: const EdgeInsets.only(left: 15.0),
         itemCount: _smallPageList.length,
         separatorBuilder: (BuildContext context, int index) =>
             Divider(height: 10),

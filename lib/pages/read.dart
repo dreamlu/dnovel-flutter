@@ -112,7 +112,6 @@ class _ReadPageState extends State<ReadPage> {
 
   // 构建带颜色的阅读页
   Widget _buildColorContent(content) {
-
     var backColor = bgColors[_backColor];
     if (_bgColor == "my_love") {
       return Container(
@@ -199,35 +198,82 @@ class _ReadPageState extends State<ReadPage> {
   Widget _buildBody() {
     return Expanded(
       child: Builder(
-        builder: (ctx) => GestureDetector(
-          child: ListView(
-            controller: _controller,
-            children: <Widget>[
-              Html(
-                data: "<font>" + _detail.content + "</font>",
-                style: {
-                  "html": Style(
-                    fontSize: FontSize(_fontSize),
-                    letterSpacing: 0.2,
+        builder: (ctx) => Container(
+          child: Stack(
+            children: [
+              ListView(
+                controller: _controller,
+                children: <Widget>[
+                  Html(
+                    data: "<font>" + _detail.content + "</font>",
+                    style: {
+                      "html": Style(
+                        fontSize: FontSize(_fontSize),
+                        letterSpacing: 0.2,
+                      ),
+                      "font": Style(
+                        // 添加一个标签防止content中没有<p>来进行行高设置
+                        lineHeight: 1.3,
+                      ),
+                      "p": Style(
+                        lineHeight: 1.3,
+                      ),
+                    },
                   ),
-                  "font": Style(
-                    // 添加一个标签防止content中没有<p>来进行行高设置
-                    lineHeight: 1.3,
+                ],
+              ),
+              Flex(
+                direction: Axis.vertical,
+                children: [
+                  Expanded(child: GestureDetector(
+                    onTap: () {
+                      double value = _controller.offset - ctx.size.height;
+                      if (value < 0) {
+                        value = 0;
+                      }
+                      _controller.animateTo(value,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.ease);
+                    },
+                  )),
+                  Expanded(
+                    child: GestureDetector(
+                      // behavior: HitTestBehavior.translucent,
+                      // child: Container(
+                      //   color: Colors.blue,
+                      //   // constraints: BoxConstraints.tight(Size(300.0, 200.0)),
+                      // ),
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: ctx,
+                          builder: (ctx2) => _buildMenuBottomSheet(ctx),
+                        );
+                      },
+                    ),
                   ),
-                  "p": Style(
-                    lineHeight: 1.3,
-                  ),
-                },
+                  Expanded(child: GestureDetector(
+                    onTap: () {
+                      double value = _controller.offset + ctx.size.height;
+                      if (value < 0) {
+                        value = 0;
+                      }
+                      _controller.animateTo(value,
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.ease);
+                    },
+                  )),
+                ],
               ),
             ],
           ),
-          onTap: () {
-            showModalBottomSheet(
-              context: ctx,
-              builder: (ctx2) => _buildMenuBottomSheet(ctx),
-            );
-          },
         ),
+        // onTap: () {
+        //   showModalBottomSheet(
+        //     context: ctx,
+        //     builder: (ctx2) => _buildMenuBottomSheet(ctx),
+        //   );
+        // },
+        // ),
       ),
     );
   }
@@ -511,14 +557,16 @@ class _ReadPageState extends State<ReadPage> {
             _chapterList);
       }
 
-      setState(() {});
-
       // 异步存储当前书架书籍阅读进度
       // 提前传递过来判断是否书架更好
       Shelf.upRecentChapterUrl(widget.bookName, url);
 
+      setState(() {});
       if (post != null) {
-        post();
+        // post();
+        if (_controller != null) {
+          _controller.jumpTo(0);
+        }
       }
     } catch (e) {
       print(e);

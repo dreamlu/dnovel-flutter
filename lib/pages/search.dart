@@ -17,7 +17,6 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<Hot> _hotList = []; // 热门搜索数据
-  List<Hist> _histList = []; // 历史搜索数据
   List<Search> _novelList = []; // 搜索小说数据
   bool _whetherLoading = false;
 
@@ -25,8 +24,6 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    // _fetchHotList();
-    // _fetchHistList();
     super.initState();
   }
 
@@ -44,10 +41,6 @@ class _SearchPageState extends State<SearchPage> {
       if (_hotList.length > 0) {
         content.add(NavTitle(title: '热门搜索'));
         content.add(_buildHotList());
-      }
-      if (_histList.length > 0) {
-        content.add(NavTitle(title: '搜索历史'));
-        content.add(_buildHistoryList());
       }
     }
 
@@ -184,53 +177,13 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _buildHistoryList() {
-    return Container(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 10.0),
-      child: Column(
-        children: List.generate(_histList.length, (int index) {
-          Hist _hist = _histList[index];
-          return ListTile(
-            title: Text(
-              _hist.keyword,
-              style: TextStyle(color: Colors.black54),
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-            ),
-            onTap: () {
-              _keywordController.text = _hist.keyword;
-              _fetchNovelList(_hist.keyword);
-            },
-          );
-        }),
-      ),
-    );
-  }
-
-  _fetchHotList() async {
-    try {
-      var result = await HttpUtils.getInstance().get('/search/hot');
-      HotModel hotResult = HotModel.fromJson(result.data);
-
-      setState(() {
-        _hotList = hotResult.data.sublist(0, 6);
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
   _fetchNovelList(String keyword) async {
     setState(() {
       _whetherLoading = true;
     });
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      int userId = prefs.getInt('userId') ?? -1; // 取
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
 
       var result = await HttpUtils.getInstance().get('/search?k=$keyword');
       SearchModel searchResult = SearchModel.fromJson(result.data);
