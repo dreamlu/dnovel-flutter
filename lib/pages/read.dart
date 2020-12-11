@@ -169,7 +169,7 @@ class _ReadPageState extends State<ReadPage> {
       // decoration: BoxDecoration(
       //   border: Border(bottom: BorderSide(color: Colors.black26)),
       // ),
-      alignment: Alignment.center,
+      // alignment: Alignment.center,
       height: 20.0,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,10 +186,12 @@ class _ReadPageState extends State<ReadPage> {
               Navigator.pop(context);
             },
           ),
-          Text(
+          Expanded( // 文字省略号失效解决
+              child: Text(
             _detail != null ? _detail.title : '',
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
-          ),
+          )),
         ],
       ),
     );
@@ -201,26 +203,29 @@ class _ReadPageState extends State<ReadPage> {
         builder: (ctx) => Container(
           child: Stack(
             children: [
-              ListView(
-                controller: _controller,
-                children: <Widget>[
-                  Html(
-                    data: "<font>" + _detail.content + "</font>",
-                    style: {
-                      "html": Style(
-                        fontSize: FontSize(_fontSize),
-                        letterSpacing: 0.2,
-                      ),
-                      "font": Style(
-                        // 添加一个标签防止content中没有<p>来进行行高设置
-                        lineHeight: 1.3,
-                      ),
-                      "p": Style(
-                        lineHeight: 1.3,
-                      ),
-                    },
-                  ),
-                ],
+              Scrollbar(
+                child: ListView(
+                  controller: _controller,
+                  children: <Widget>[
+                    Html(
+                      data: "<font>" + _detail.content + "</font>",
+                      style: {
+                        "html": Style(
+                          fontSize: FontSize(_fontSize),
+                          letterSpacing: 0.2,
+                        ),
+                        "font": Style(
+                          // 添加一个标签防止content中没有<p>来进行行高设置
+                          lineHeight: 1.3,
+                        ),
+                        "p": Style(
+                          lineHeight: 1.5,
+                        ),
+                      },
+                    ),
+                  ],
+                ),
+                thickness: 5,
               ),
               Flex(
                 direction: Axis.vertical,

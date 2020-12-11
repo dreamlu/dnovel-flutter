@@ -32,7 +32,7 @@ dependencies:
   dio: ^3.0.0
   flutter_html: ^1.1.1
   chewie_audio: ^1.1.1
-  fluttertoast: ^7.1.4
+  fluttertoast: ^7.1.4 # 再按一次退出提示
 #  cached_network_image: ^2.3.3 # ps: 使用会一直卡在构建中why?
 
 dev_dependencies:

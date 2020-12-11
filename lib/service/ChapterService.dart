@@ -31,7 +31,7 @@ class ChapterService {
     // 1.清除早期缓存
     int oldIndex = list.indexWhere((element) => element.title == service.title);
     if (oldIndex != -1) {
-      for (int i = oldIndex; i >= 0; i--) {
+      for (int i = oldIndex-2; i >= 0; i--) {
         try {
           list.removeAt(i);
         } catch (e) {}
