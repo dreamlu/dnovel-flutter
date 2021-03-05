@@ -48,7 +48,7 @@ class ChapterService {
     }
     for (int i = index + 1; i < _chapterList.length && i < index + 1 + 4; i++) {
       int index2 = list
-          .indexWhere((element) => element.title == _chapterList[index].name);
+          .indexWhere((element) => element.title == _chapterList[i].name);
       if (index2 == -1) {
         try {
           var result = await HttpUtils.getInstance().get(

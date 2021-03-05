@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 
 class LoadingView extends StatefulWidget {
   final double width;
   final Color color;
+
   LoadingView({this.width, this.color});
+
   @override
   State createState() {
-    return new BallPulseIndicatorState(width: this.width, color: this.color);
+    return BallPulseIndicatorState(width: this.width, color: this.color);
   }
 }
 
@@ -23,7 +25,9 @@ class BallPulseIndicatorState extends State<LoadingView>
   double width;
   Color color;
   Size size;
+
   BallPulseIndicatorState({this.width, this.color});
+
   Animation<double> animation;
   AnimationController controller;
 
@@ -61,24 +65,25 @@ class BallPulseIndicatorState extends State<LoadingView>
   @override
   Widget build(BuildContext context) {
     BallPulseIndicatorPainter painter =
-        new BallPulseIndicatorPainter(this.animation);
+    BallPulseIndicatorPainter(this.animation);
     painter.myPaint = this.paint;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        CustomPaint(
-          painter: painter,
-          size: this.size,
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 10.0),
-          child: Text(
-            '正在加载',
-            style: TextStyle(fontSize: 20),
-          ),
-        )
-      ],
-    );
+    return Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CustomPaint(
+              painter: painter,
+              size: this.size,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Text(
+                '正在加载',
+                style: TextStyle(fontSize: 20),
+              ),
+            )
+          ],
+        ));
   }
 
   dispose() {
@@ -90,19 +95,21 @@ class BallPulseIndicatorState extends State<LoadingView>
 class BallPulseIndicatorPainter extends CustomPainter {
   Paint myPaint;
   Animation<double> animation;
+
   BallPulseIndicatorPainter(this.animation);
+
   @override
   void paint(Canvas canvas, Size size) {
     double d = size.height;
     double r = d / 2;
-    Tween<double> tween = new Tween<double>(
+    Tween<double> tween = Tween<double>(
         begin: BallPulseIndicatorState.scaleBegin,
         end: BallPulseIndicatorState.scaleEnd);
     //第一个圆的绘制半径
     double firstScaleValue;
     double firstTempR;
     double scaleGap = (BallPulseIndicatorState.scaleEnd -
-            BallPulseIndicatorState.scaleBegin) /
+        BallPulseIndicatorState.scaleBegin) /
         BallPulseIndicatorState.duration *
         BallPulseIndicatorState.delay;
     double secondScaleValue;
