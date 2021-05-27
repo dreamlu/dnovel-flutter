@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/color.dart';
 
+// 废弃,使用lib/pages/IndexPage.dart方式
 class MyBottomAppBar extends StatelessWidget {
   final int currentIndex;
   MyBottomAppBar({this.currentIndex});

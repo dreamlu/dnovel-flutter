@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /*
  * 封装 Dio，单例模式
@@ -12,7 +13,7 @@ class HttpUtils {
   static Dio dio;
 
   /// default options
-  static const String API_PREFIX = 'http://xxx.com/api';
+  static const String API_PREFIX = 'http://xxx/api';
   // static const String API_PREFIX = 'http://192.168.31.105:8022';
   static const int CONNECT_TIMEOUT = 50000;
   static const int RECEIVE_TIMEOUT = 3000;
@@ -29,5 +30,20 @@ class HttpUtils {
       dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
     }
     return dio;
+  }
+}
+
+// int
+extension widthExtention on int {
+  get w {
+    return ScreenUtil().setWidth(this);
+  }
+
+  get h {
+    return ScreenUtil().setWidth(this);
+  }
+
+  get sp {
+    return ScreenUtil().setSp(this);
   }
 }

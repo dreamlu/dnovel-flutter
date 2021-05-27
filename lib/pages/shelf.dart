@@ -48,9 +48,6 @@ class _ShelfPageState extends State<ShelfPage> {
             color: MyColor.bgColor,
             child: content,
           ),
-          bottomNavigationBar: MyBottomAppBar(
-            currentIndex: 0,
-          ),
         ),
         onWillPop: Exit.isExit);
   }
@@ -177,7 +174,10 @@ class _ShelfPageState extends State<ShelfPage> {
         leading: img,
         title:
             Text(novel.bookName, style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text("作者: " + novel.authorName),
+        subtitle: Row(children: [
+          Expanded(child: Text("作者: " + novel.authorName)),
+          Text("来源: " + novel.source, style: TextStyle(color: Colors.black26)),
+        ]),
         // trailing: Icon(Icons.chevron_right),
         // tileColor: Coll,
       ),

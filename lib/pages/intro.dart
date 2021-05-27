@@ -155,10 +155,13 @@ class _IntroPageState extends State<IntroPage> {
           ),
           onTap: () async {
             final result = await _postShelf();
-            // 跳转到首页
             if (result == true) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/shelf', (Route<dynamic> route) => false);
+              setState(() {
+                isShelf = 1;
+              });
+              // 跳转到首页
+              // Navigator.pushNamedAndRemoveUntil(
+              //     context, '/shelf', (Route<dynamic> route) => false);
             }
           },
         ),
@@ -197,6 +200,9 @@ class _IntroPageState extends State<IntroPage> {
           ),
           Text(
             '分类：' + _intro.classifyName,
+          ),
+          Text(
+            '来源：' + _intro.source,
           )
         ],
       ),

@@ -33,13 +33,10 @@ class _ClassifyPageState extends State<ClassifyPage> {
           appBar: _buildAppBar(),
           body: Container(
             color: MyColor.bgColor,
-            child: Row(children: [
+            child: Column(children: [
               _buildClassifyList(),
               _buildNovelList(),
             ]),
-          ),
-          bottomNavigationBar: MyBottomAppBar(
-            currentIndex: 1,
           ),
         ),
         onWillPop: Exit.isExit);
@@ -67,13 +64,11 @@ class _ClassifyPageState extends State<ClassifyPage> {
   }
 
   Widget _buildClassifyList() {
-    return Expanded(
-      flex: 1,
-      child: ListView(
-        children: List.generate(_classifyList.length, (index) {
-          return _buildClassifyItem(item: _classifyList[index], index: index);
-        }),
-      ),
+    return Wrap(
+      direction: Axis.horizontal,
+      children: List.generate(_classifyList.length, (index) {
+        return _buildClassifyItem(item: _classifyList[index], index: index);
+      }),
     );
   }
 
@@ -109,7 +104,7 @@ class _ClassifyPageState extends State<ClassifyPage> {
         crossAxisCount: 2,
         mainAxisSpacing: 5.0,
         // 垂直间距
-        crossAxisSpacing: 5.0,
+        crossAxisSpacing: 3.0,
         // 水平间距
         childAspectRatio: 1.15,
         // 宽 / 高 = 0.7
