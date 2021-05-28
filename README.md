@@ -8,12 +8,13 @@ dnovel 是一个简洁，干净的小说聚合系统
 
 [前端flutter地址](https://github.com/dreamlu/dnovel-flutter)
 
-[下载体验apk](https://github.com/dreamlu/dnovel-flutter/releases)
-
 长期维护,学习flutter自用  
 
 ### 界面  
-![界面](lib/images/dnovel_flutter.jpeg)
+![界面](lib/images/dnovel_flutter.jpeg) ![界面](lib/images/dnovel_read.jpeg)  
+
+### 体验  
+![界面](lib/images/dnovel_qrcode.jpeg)  
 
 ## TODO
 - [x] 实时记录书架相关书籍阅读位置或章节  

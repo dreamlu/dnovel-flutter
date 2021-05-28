@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/Chapter.dart';
+import 'package:dnovel_flutter/utils/extension/extension.dart';
 
 class ChapterDrawer extends StatefulWidget {
   final String bookName;
@@ -50,7 +51,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
   Widget _buildChapterDrawerHeader() {
     return Container(
       padding: EdgeInsets.only(left: 15.0),
-      height: 40.0,
+      height: 95.h,
       alignment: Alignment.centerLeft,
       child: ListView(
         children: <Widget>[
@@ -105,7 +106,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     }
 
     return Container(
-      height: 50.0,
+      height: 100.h,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: content,

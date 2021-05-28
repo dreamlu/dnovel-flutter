@@ -6,8 +6,6 @@ import 'dart:convert';
 import './read.dart';
 import '../models/Shelf.dart';
 import '../utils/color.dart';
-import '../components/BottomAppBar.dart';
-import '../components/NovelItem.dart';
 import '../components/LoadingView.dart';
 
 class ShelfPage extends StatefulWidget {
@@ -44,12 +42,18 @@ class _ShelfPageState extends State<ShelfPage> {
     return WillPopScope(
         child: Scaffold(
           appBar: _buildAppBar(),
-          body: Container(
-            color: MyColor.bgColor,
-            child: content,
-          ),
+          body: RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: Container(
+                color: MyColor.bgColor,
+                child: content,
+              )),
         ),
         onWillPop: Exit.isExit);
+  }
+
+  Future<Null> _onRefresh() async {
+    _fetchShelfList();
   }
 
   Widget _buildAppBar() {

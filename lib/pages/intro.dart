@@ -179,6 +179,7 @@ class _IntroPageState extends State<IntroPage> {
         authorName: _intro.authorName,
         bookName: _intro.bookName,
         cover: _intro.cover,
+        source: _intro.source,
       ),
     );
   }
@@ -236,7 +237,7 @@ class _IntroPageState extends State<IntroPage> {
       _intro = introResult.data;
 
       // 如果没有第一章,则直接从最新章节开始
-      if(_intro.firstUrl != ''){
+      if (_intro.firstUrl != '') {
         _intro.recentChapterUrl = _intro.firstUrl;
       }
 

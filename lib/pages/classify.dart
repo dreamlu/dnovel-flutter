@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import './intro.dart';
 import '../models/Classify.dart';
 import '../models/Novel.dart';
-import '../components/BottomAppBar.dart';
 import '../components/NovelItem.dart';
 import '../components/LoadingView.dart';
 import '../utils/color.dart';
@@ -114,6 +113,7 @@ class _ClassifyPageState extends State<ClassifyPage> {
             child: NovelItem(
               bookName: novel.bookName,
               authorName: novel.authorName,
+              source: novel.source,
             ),
             onTap: () {
               String bookUrl = novel.bookUrl;

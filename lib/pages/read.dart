@@ -1,4 +1,5 @@
 import 'package:dnovel_flutter/models/Shelf.dart';
+import 'package:dnovel_flutter/pages/IndexPage.dart';
 import 'package:dnovel_flutter/service/ChapterService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -84,9 +85,7 @@ class _ReadPageState extends State<ReadPage> {
       statusBarIconBrightness: Brightness.light,
     ));
 
-    return WillPopScope(
-      child: SafeArea(
-        child: Scaffold(
+    return Scaffold(
           body: _buildColorContent(content),
           drawer: ChapterDrawer(
             bookName: widget.bookName,
@@ -96,17 +95,6 @@ class _ReadPageState extends State<ReadPage> {
               _fetchDetail(url);
             },
           ),
-        ),
-      ),
-      onWillPop: () {
-        if (widget.fromPage == 'ShelfPage') {
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/shelf', (Route<dynamic> route) => false); // 相当于刷新书架
-        } else {
-          Navigator.pop(context); // 返回上一级
-        }
-        return;
-      },
     );
   }
 

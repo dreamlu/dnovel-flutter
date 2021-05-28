@@ -127,6 +127,7 @@ class _SearchPageState extends State<SearchPage> {
             child: NovelItem(
               bookName: novel.bookName,
               authorName: novel.authorName,
+              source: novel.source,
             ),
             onTap: () {
               Navigator.push(
