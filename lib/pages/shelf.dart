@@ -94,16 +94,12 @@ class _ShelfPageState extends State<ShelfPage> {
             height: 150.0,
             image: AssetImage("lib/images/empty.png"),
           ),
-          FlatButton(
+          Padding(
             child: Text(
               '书架空空，去书屋逛逛吧~~',
               style: TextStyle(color: MyColor.linkColor),
             ),
             padding: EdgeInsets.symmetric(vertical: 60.0),
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/classify', (Route<dynamic> route) => false);
-            },
           )
         ],
       ),
@@ -213,7 +209,12 @@ class _ShelfPageState extends State<ShelfPage> {
               fromPage: 'ShelfPage',
             ),
           ),
-        );
+        ).then((value) => {
+              // 直接刷新
+              setState(() {
+                _fetchShelfList(); // 返回的页面Navigator.pop(context,'value');
+              })
+            });
       },
     );
   }
