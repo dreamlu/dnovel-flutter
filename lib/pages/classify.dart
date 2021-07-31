@@ -63,12 +63,14 @@ class _ClassifyPageState extends State<ClassifyPage> {
   }
 
   Widget _buildClassifyList() {
-    return Wrap(
-      direction: Axis.horizontal,
-      children: List.generate(_classifyList.length, (index) {
-        return _buildClassifyItem(item: _classifyList[index], index: index);
-      }),
-    );
+    return SizedBox(
+        height: 90.h,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: List.generate(_classifyList.length, (index) {
+            return _buildClassifyItem(item: _classifyList[index], index: index);
+          }),
+        ));
   }
 
   Widget _buildClassifyItem({item, index}) {
@@ -97,36 +99,35 @@ class _ClassifyPageState extends State<ClassifyPage> {
 
   Widget _buildNovelList() {
     Widget content = Container(
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-      child: GridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 5.0,
-        // 垂直间距
-        crossAxisSpacing: 3.0,
-        // 水平间距
-        childAspectRatio: 1.15,
-        // 宽 / 高 = 0.7
-        children: List.generate(_novelList.length, (index) {
-          Novel novel = _novelList[index];
-          return GestureDetector(
-            child: NovelItem(
+      // color: Colors.white,
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.h),
+      child: ListView.separated(
+          itemCount: _novelList.length,
+          separatorBuilder: (BuildContext context, int index) =>
+              Divider(height: 20.h),
+          // 宽 / 高 = 0.7
+          itemBuilder: (BuildContext context, int index) {
+            Novel novel = _novelList[index];
+            Widget content = NovelItem(
               bookName: novel.bookName,
               authorName: novel.authorName,
               source: novel.source,
-            ),
-            onTap: () {
-              String bookUrl = novel.bookUrl;
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                return IntroPage(
-                  url: bookUrl,
-                  source: novel.source,
-                );
-              }));
-            },
-          );
-        }),
-      ),
+              bookCoverUrl: novel.cover,
+              desc: novel.desc,
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                  return IntroPage(
+                    url: novel.bookUrl,
+                    source: novel.source,
+                  );
+                }));
+              },
+            );
+            return SizedBox(
+              // height: 150.h,
+              child: content,
+            );
+          }),
     );
 
     if (_whetherNovelLoading) {
@@ -134,7 +135,6 @@ class _ClassifyPageState extends State<ClassifyPage> {
     }
 
     return Expanded(
-      flex: 3,
       child: content,
     );
   }

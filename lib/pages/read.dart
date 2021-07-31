@@ -1,5 +1,4 @@
 import 'package:dnovel_flutter/models/Shelf.dart';
-import 'package:dnovel_flutter/pages/IndexPage.dart';
 import 'package:dnovel_flutter/service/ChapterService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +6,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/Detail.dart';
-import '../models/Chapter.dart';
-import '../utils/request.dart';
-import '../utils/DialogUtils.dart';
-import '../components/LoadingView.dart';
+
 import '../components/ChapterDrawer.dart';
+import '../components/LoadingView.dart';
+import '../models/Chapter.dart';
+import '../models/Detail.dart';
+import '../utils/DialogUtils.dart';
+import '../utils/request.dart';
 
 Map bgColors = {
   'daytime': null, // 白天,默认无颜色
@@ -53,6 +53,8 @@ class _ReadPageState extends State<ReadPage> {
   String _backColor = 'daytime'; // 整体背景颜色
   bool _whetherNight = false; // 是否是黑夜
   ScrollController _controller; // 滚动条对象
+  String bookId;
+  String curPos;
 
   @override
   void initState() {
@@ -60,14 +62,21 @@ class _ReadPageState extends State<ReadPage> {
     _fetchDetail(widget.url);
     _fetchChapterList(widget.detailUrl, widget.source);
     _initData();
+    bookId = widget.bookName + widget.bookName;
+    curPos = bookId + '_curPos';
     super.initState();
   }
 
+  // @override
+  // void dispose() {
+  //   // 移除监听订阅
+  //   MyApp.routeObserver.unsubscribe(this);
+  //   super.dispose();
+  // }
+
   @override
   void deactivate() {
-    if (widget.shelfId != null) {
-      _saveData();
-    }
+    _saveData();
     super.deactivate();
   }
 
@@ -86,15 +95,19 @@ class _ReadPageState extends State<ReadPage> {
     ));
 
     return Scaffold(
-          body: _buildColorContent(content),
-          drawer: ChapterDrawer(
-            bookName: widget.bookName,
-            title: _detail != null ? _detail.title : '',
-            chapterList: _chapterList,
-            onTap: (String url) {
-              _fetchDetail(url);
-            },
-          ),
+      body: _buildColorContent(content),
+      drawer: ChapterDrawer(
+        bookName: widget.bookName,
+        title: _detail != null ? _detail.title : '',
+        chapterList: _chapterList,
+        onTap: (String url) {
+          // 重置坐标
+          setState(() {
+            _controller.jumpTo(0);
+          });
+          _fetchDetail(url);
+        },
+      ),
     );
   }
 
@@ -174,7 +187,8 @@ class _ReadPageState extends State<ReadPage> {
               Navigator.pop(context);
             },
           ),
-          Expanded( // 文字省略号失效解决
+          Expanded(
+              // 文字省略号失效解决
               child: Text(
             _detail != null ? _detail.title : '',
             maxLines: 1,
@@ -586,8 +600,7 @@ class _ReadPageState extends State<ReadPage> {
     double fontSize = prefs.getDouble('fontSize') ?? 20.0;
     String bgColor = prefs.getString('bgColor') ?? 'my_love';
     String backColor = prefs.getString('backColor') ?? 'daytime';
-    double currPos =
-        prefs.getDouble(widget.shelfId.toString() + 'currPos') ?? 0.0;
+    double currPos = prefs.getDouble(curPos) ?? 0.0;
     _controller = new ScrollController(initialScrollOffset: currPos);
     setState(() {
       _fontSize = fontSize;
@@ -599,7 +612,7 @@ class _ReadPageState extends State<ReadPage> {
   _saveData() async {
     double _currPos = _controller.position.pixels;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setDouble(widget.shelfId.toString() + 'currPos', _currPos);
+    prefs.setDouble(curPos, _currPos);
   }
 }
 

@@ -22,8 +22,10 @@ class Search {
   String authorName;
   String bookUrl;
   String source;
+  String cover;
 
-  Search({this.bookName, this.authorName, this.bookUrl, this.source});
+  Search(
+      {this.bookName, this.authorName, this.bookUrl, this.source, this.cover});
 
   factory Search.fromJson(Map<String, dynamic> json) {
     return Search(
@@ -31,6 +33,7 @@ class Search {
       authorName: json['author'],
       bookUrl: json['url'],
       source: json['source'],
+      cover: json['cover'],
     );
   }
 }

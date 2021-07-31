@@ -4,71 +4,72 @@ import 'package:flutter/material.dart';
 class NovelItem extends StatelessWidget {
   final String bookName;
   final String authorName;
-  final String cover; // 封面
   final String source;
+  final String bookCoverUrl;
+  final String desc;
 
-  NovelItem({this.bookName, this.authorName, this.cover, this.source = ''});
+  final Function onTap;
+
+  NovelItem(
+      {this.bookName,
+      this.authorName,
+      this.source = '',
+      this.bookCoverUrl,
+      this.onTap,
+      this.desc});
 
   @override
   Widget build(BuildContext context) {
-    var back;
-    if (cover == null || cover == "") {
-      back = DecoratedBox(
-          // 用装饰容器来绘制背景色, 可以直接用更上层的Container(color: MyColor.bgColor)
-          decoration: BoxDecoration(
-        color: Color.fromRGBO(242, 235, 217, 0.4),
-      )); // 背景色
+    return _buildShelfItem(context);
+  }
+
+  Widget _buildShelfItem(BuildContext context) {
+    List<Widget> content = [];
+    var img;
+    if (bookCoverUrl == null || bookCoverUrl == "") {
+      img = Image.asset("lib/images/empty.png");
     } else {
-      back = Image.network(
-        cover,
-        fit: BoxFit.cover, // 全屏填充
-      );
+      try {
+        img = ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: Image.network(bookCoverUrl),
+        ); // CachedNetworkImage(imageUrl: novel.bookCoverUrl); //Image.network(novel.bookCoverUrl);
+      } catch (e) {
+        img = Image.asset("lib/images/empty.png");
+      }
     }
 
-    return Card(
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: AspectRatio(
-          aspectRatio: 0.7,
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              back,
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      Expanded(child: Text(
-                        bookName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 32.sp,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500), // 中等加粗
-                      )),
-                      Text(
-                        "作者: " + authorName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 26.sp, color: Colors.grey),
-                      ),
-                      Text(
-                        "来源: " + source,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 22.sp, color: Colors.black26),
-                      ),
-                      SizedBox(height: 20.h),
-                    ],
-                  )),
+    content.add(
+      // NovelItem(bookName: novel.bookName, authorName: novel.authorName),
+      ListTile(
+          leading: img,
+          title: Text(bookName, style: TextStyle(fontWeight: FontWeight.bold)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10.h),
+              Row(children: [
+                Expanded(
+                    child: Text(authorName.contains("作者")
+                        ? authorName
+                        : '作者：' + authorName)),
+                Text("来源: " + source, style: TextStyle(color: Colors.black26)),
+              ]),
+              SizedBox(height: 5.h),
+              desc == null
+                  ? SizedBox()
+                  : Text(
+                      desc.contains("简介") ? desc : '简介：' + desc,
+                      maxLines: 2,
+                    ),
             ],
-          ),
-        ));
+          )),
+    );
+
+    // 点击涟漪效果
+    return InkWell(
+      child: Stack(children: content),
+      onTap: onTap,
+    );
   }
 }

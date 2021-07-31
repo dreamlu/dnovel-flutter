@@ -1,3 +1,4 @@
+import 'package:dnovel_flutter/components/ImageNetwork.dart';
 import 'package:dnovel_flutter/models/Shelf.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -172,14 +173,30 @@ class _IntroPageState extends State<IntroPage> {
   /* 第一行：小说名称和作者名称 */
   Widget _buildBookAndAuthor() {
     return Container(
-      height: 180.0,
-      alignment: Alignment.center,
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      child: NovelItem(
-        authorName: _intro.authorName,
-        bookName: _intro.bookName,
-        cover: _intro.cover,
-        source: _intro.source,
+      // height: 180.0,
+      alignment: Alignment.topCenter,
+      margin: EdgeInsets.symmetric(vertical: 10.h),
+      padding: EdgeInsets.all(30.h),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.h),
+            child: ImageNetwork(_intro.cover, width: 200.w),
+          ),
+          SizedBox(width: 20.w),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(_intro.bookName,
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 32.sp)),
+              SizedBox(height: 10.h),
+              Text(_intro.authorName.contains("作者")
+                  ? _intro.authorName
+                  : '作者：' + _intro.authorName),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -188,7 +205,8 @@ class _IntroPageState extends State<IntroPage> {
   Widget _buildTimeAndClassify() {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(20.0),
+      margin: EdgeInsets.symmetric(vertical: 10.h),
+      padding: EdgeInsets.all(30.h),
       child: ListView(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         shrinkWrap: true,
@@ -214,8 +232,8 @@ class _IntroPageState extends State<IntroPage> {
   Widget _buildBookDesc() {
     return Container(
       color: Colors.white,
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+      margin: EdgeInsets.symmetric(vertical: 10.h),
+      padding: EdgeInsets.all(30.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

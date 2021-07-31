@@ -22,15 +22,25 @@ class Novel {
   String bookName;
   String bookUrl;
   String source;
+  String cover;
+  String desc;
 
-  Novel({this.authorName, this.bookName, this.bookUrl, this.source});
+  Novel({this.authorName,
+    this.bookName,
+    this.bookUrl,
+    this.source,
+    this.cover,
+    this.desc});
 
   factory Novel.fromJson(Map<String, dynamic> json) {
+    json['description'] = json['description']?.replaceAll(new RegExp(r"\s+\b|\b\s|\n"), "");
     return Novel(
       authorName: json['author'],
       bookName: json['name'],
       bookUrl: json['url'],
       source: json['source'],
+      cover: json['cover'],
+      desc: json["description"],
     );
   }
 }

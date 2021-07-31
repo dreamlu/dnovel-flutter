@@ -38,17 +38,13 @@ class _SearchPageState extends State<SearchPage> {
         content.add(NavTitle(title: '找到了这些书📚'));
         content.add(_buildNovelList());
       }
-      if (_hotList.length > 0) {
-        content.add(NavTitle(title: '热门搜索'));
-        content.add(_buildHotList());
-      }
     }
 
     return Scaffold(
       appBar: _buildAppBar(),
       body: Container(
         color: MyColor.bgColor,
-        child: ListView(children: content),
+        child: Column(children: content),
       ),
     );
   }
@@ -108,74 +104,37 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildNovelList() {
-    return Container(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 10.0),
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-      child: GridView.count(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        crossAxisCount: 3,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 10.0,
-        childAspectRatio: 0.75,
-        // 宽 / 高
-        padding: EdgeInsets.all(5.0),
-        children: List.generate(_novelList.length, (index) {
-          Search novel = _novelList[index];
-          return GestureDetector(
-            child: NovelItem(
+    return Expanded(
+        child: Container(
+      // color: Colors.white,
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.h),
+      child: ListView.separated(
+          itemCount: _novelList.length,
+          separatorBuilder: (BuildContext context, int index) =>
+              Divider(height: 20.h),
+          // 宽 / 高 = 0.7
+          itemBuilder: (BuildContext context, int index) {
+            Search novel = _novelList[index];
+            Widget content = NovelItem(
               bookName: novel.bookName,
               authorName: novel.authorName,
               source: novel.source,
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => IntroPage(
+              bookCoverUrl: novel.cover,
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                  return IntroPage(
                     url: novel.bookUrl,
                     source: novel.source,
-                  ),
-                ),
-              );
-            },
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buildHotList() {
-    return GridView.count(
-      padding: const EdgeInsets.all(10.0),
-      crossAxisCount: 3,
-      crossAxisSpacing: 2.0,
-      mainAxisSpacing: 2.0,
-      childAspectRatio: 2 / 1,
-      // 宽 : 高 = 2 : 1
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      children: List.generate(_hotList.length, (index) {
-        Hot _hot = _hotList[index];
-        return GestureDetector(
-          child: Container(
-            color: Colors.white,
-            alignment: Alignment.center,
-            child: Text(
-              _hot.keyword,
-              style: TextStyle(
-                color: Colors.black54,
-              ),
-            ),
-          ),
-          onTap: () {
-            _keywordController.text = _hot.keyword;
-            _fetchNovelList(_hot.keyword);
-          },
-        );
-      }),
-    );
+                  );
+                }));
+              },
+            );
+            return SizedBox(
+              // height: 150.h,
+              child: content,
+            );
+          }),
+    ));
   }
 
   _fetchNovelList(String keyword) async {
@@ -196,7 +155,6 @@ class _SearchPageState extends State<SearchPage> {
       setState(() {
         _novelList = searchResult.data;
       });
-
     } catch (e) {
       print(e);
     }

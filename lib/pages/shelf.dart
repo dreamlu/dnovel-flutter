@@ -110,46 +110,10 @@ class _ShelfPageState extends State<ShelfPage> {
     return ListView.separated(
       itemCount: _shelfList.length,
       itemBuilder: (context, index) {
-        // if (index == _shelfList.length - 1) {
-        //   // 获取数据,分页加载
-        //   // get data
-        //   return Container(
-        //       alignment: Alignment.center,
-        //       padding: EdgeInsets.all(16.0),
-        //       child: Text(
-        //         "没有更多了",
-        //         style: TextStyle(color: Colors.grey),
-        //       ));
-        //   // }
-        // }
         return _buildShelfItem(_shelfList[index]);
       },
       separatorBuilder: (context, index) => Divider(height: .0),
     );
-    // return ListView(
-    //   children: <Widget>[
-    //     Card(
-    //       margin: EdgeInsets.all(10.0),
-    //       elevation: 0,
-    //       child: Container(
-    //           padding: EdgeInsets.all(20.0),
-    //           child: GridView.count(
-    //             shrinkWrap: true,
-    //             physics: NeverScrollableScrollPhysics(),
-    //             crossAxisCount: 2,
-    //             mainAxisSpacing: 20.0,
-    //             crossAxisSpacing: 20.0,
-    //             childAspectRatio: 0.75,
-    //             // 宽 / 高 = 0.7
-    //             padding: EdgeInsets.all(5.0),
-    //             children: List.generate(_shelfList.length, (index) {
-    //               Shelf novel = _shelfList[index];
-    //               return _buildShelfItem(novel);
-    //             }),
-    //           )),
-    //     ),
-    //   ],
-    // );
   }
 
   // 书架列表item构建
@@ -186,7 +150,7 @@ class _ShelfPageState extends State<ShelfPage> {
       content.add(Align(
         alignment: Alignment.topRight,
         child: IconButton(
-          icon: Icon(Icons.close),
+          icon: Icon(Icons.delete_outline),
           onPressed: () {
             _deleteShelf(novel.bookName);
           },
