@@ -14,13 +14,13 @@ class ChapterService {
   String bookName;
   String source;
   String chapterUrl;
-  String title; // 当前章节名称
+  String currentUrl; // 当前章节名称
 
   ChapterService(
     this.bookName,
     this.source,
     this.chapterUrl,
-    this.title,
+    this.currentUrl,
   );
 
   /// 存储当前章节以及后续几章
@@ -28,10 +28,14 @@ class ChapterService {
   /// _chapter: 所有章节列表
   static Future cache(
       ChapterService service, List<Chapter> _chapterList) async {
+    if(_chapterList.length == 0) {
+      return;
+    }
     // 1.清除早期缓存
-    int oldIndex = list.indexWhere((element) => element.title == service.title);
+    int oldIndex =
+        list.indexWhere((element) => element.currentUrl == service.currentUrl);
     if (oldIndex != -1) {
-      for (int i = oldIndex-2; i >= 0; i--) {
+      for (int i = oldIndex - 2; i >= 0; i--) {
         try {
           list.removeAt(i);
         } catch (e) {}
@@ -47,8 +51,8 @@ class ChapterService {
       return;
     }
     for (int i = index + 1; i < _chapterList.length && i < index + 1 + 4; i++) {
-      int index2 = list
-          .indexWhere((element) => element.title == _chapterList[i].name);
+      int index2 =
+          list.indexWhere((element) => element.title == _chapterList[i].name);
       if (index2 == -1) {
         try {
           var result = await HttpUtils.getInstance().get(
@@ -64,7 +68,7 @@ class ChapterService {
   }
 
   /// 获得缓存内容
-  static Future<Detail> getNextChapter (
+  static Future<Detail> getNextChapter(
       Detail detail, String url, String source) async {
     if (detail == null) {
       var result = await HttpUtils.getInstance()

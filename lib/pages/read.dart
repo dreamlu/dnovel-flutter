@@ -67,12 +67,11 @@ class _ReadPageState extends State<ReadPage> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   // 移除监听订阅
-  //   MyApp.routeObserver.unsubscribe(this);
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   void deactivate() {
@@ -101,11 +100,7 @@ class _ReadPageState extends State<ReadPage> {
         title: _detail != null ? _detail.title : '',
         chapterList: _chapterList,
         onTap: (String url) {
-          // 重置坐标
-          setState(() {
-            _controller.jumpTo(0);
-          });
-          _fetchDetail(url);
+          _fetchDetail(url, post: () {});
         },
       ),
     );
@@ -151,17 +146,6 @@ class _ReadPageState extends State<ReadPage> {
         ),
       ),
     );
-  }
-
-  void _showJoinBottomSheet() async {
-    // 从小说详情页面进入的阅读页面，当返回上一页面时
-    // 弹出对话框询问是否加入书架
-    var result = await showModalBottomSheet(
-      context: context,
-      builder: (ctx) => _buildJoinShelfBottomSheet(ctx),
-      backgroundColor: Colors.transparent,
-    );
-    Navigator.pop(context, result);
   }
 
   Widget _buildHeader() {
@@ -307,9 +291,7 @@ class _ReadPageState extends State<ReadPage> {
                   DialogUtils.showToastDialog(context, text: '当前是第一章了哦~');
                   return;
                 }
-                _fetchDetail(_detail.prevUrl, post: () {
-                  _controller = new ScrollController(initialScrollOffset: 0.0);
-                });
+                _fetchDetail(_detail.prevUrl, post: () {});
               },
             ),
           ),
@@ -323,9 +305,7 @@ class _ReadPageState extends State<ReadPage> {
                   DialogUtils.showToastDialog(context, text: '已经是最新章节了哦~');
                   return;
                 }
-                _fetchDetail(_detail.nextUrl, post: () {
-                  _controller = new ScrollController(initialScrollOffset: 0.0);
-                });
+                _fetchDetail(_detail.nextUrl, post: () {});
               },
             ),
           ),
@@ -474,78 +454,6 @@ class _ReadPageState extends State<ReadPage> {
     );
   }
 
-  Widget _buildJoinShelfBottomSheet(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.0),
-          topRight: Radius.circular(20.0),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              child: Text(
-                '提示',
-                style: TextStyle(fontSize: 20.0),
-              ),
-              padding: EdgeInsets.only(left: 20.0, top: 10),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                '加入书架，下次找书更方便',
-                style: TextStyle(fontSize: 16.0),
-              ),
-            ),
-            flex: 2,
-          ),
-          Expanded(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: GestureDetector(
-                    child: Container(
-                      alignment: Alignment.center,
-                      color: Colors.blueAccent,
-                      child: Text(
-                        '加入书架',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    onTap: () {
-                      // 加入书架
-                      Navigator.pop(context, 'join');
-                    },
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    child: Container(
-                      alignment: Alignment.center,
-                      color: Colors.transparent,
-                      child: Text('取消'),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   _fetchDetail(String url, {Function post}) async {
     Detail oldDetail = _detail;
     setState(() {
@@ -553,28 +461,29 @@ class _ReadPageState extends State<ReadPage> {
     });
 
     try {
-      _detail =
-          await ChapterService.getNextChapter(oldDetail, url, widget.source);
-
-      // 提前加载章节
-      // 缓存
-      if (_detail != null && _chapterList.length > 0) {
+      // 异步缓存提前加载章节
+      if(_chapterList.length > 0) {
         ChapterService.cache(
-            ChapterService(widget.bookName, widget.source, url, _detail.title),
+            ChapterService(
+                widget.bookName, widget.source, url, oldDetail.nextUrl),
             _chapterList);
       }
+
+
+      _detail =
+          await ChapterService.getNextChapter(oldDetail, url, widget.source);
 
       // 异步存储当前书架书籍阅读进度
       // 提前传递过来判断是否书架更好
       Shelf.upRecentChapterUrl(widget.bookName, url);
-
-      setState(() {});
       if (post != null) {
         // post();
-        if (_controller != null) {
+        // 优先跳转防止二次构建页面未加载,跳转失败,eg: ScrollController not attached to any scroll views.
+        if (_controller.hasClients) {
           _controller.jumpTo(0);
         }
       }
+      setState(() {});
     } catch (e) {
       print(e);
     }
@@ -589,6 +498,11 @@ class _ReadPageState extends State<ReadPage> {
 
       setState(() {
         _chapterList = chapterResult.data;
+        // 异步缓存提前加载章节
+        ChapterService.cache(
+            ChapterService(
+                widget.bookName, widget.source, widget.url, ''),
+            _chapterList);
       });
     } catch (e) {
       print(e);
@@ -601,7 +515,8 @@ class _ReadPageState extends State<ReadPage> {
     String bgColor = prefs.getString('bgColor') ?? 'my_love';
     String backColor = prefs.getString('backColor') ?? 'daytime';
     double currPos = prefs.getDouble(curPos) ?? 0.0;
-    _controller = new ScrollController(initialScrollOffset: currPos);
+    _controller =
+        ScrollController(initialScrollOffset: currPos, keepScrollOffset: false);
     setState(() {
       _fontSize = fontSize;
       _bgColor = bgColor;
