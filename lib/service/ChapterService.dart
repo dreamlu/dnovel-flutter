@@ -7,7 +7,10 @@ import 'package:dnovel_flutter/utils/request.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String _chapterStore = "chapter_store";
-List<Detail> list = [];
+List<Detail> list = []; // 缓存列表
+List<Chapter> chapterList = []; // 章节列表
+const int cacheNum = 6; // 缓存数量
+const int cacheLeftNum = 4; // 缓存剩余数量时开启再次缓存
 
 // 全局缓存服务
 class ChapterService {
@@ -25,43 +28,39 @@ class ChapterService {
 
   /// 存储当前章节以及后续几章
   /// service: 当前章节信息
-  /// _chapter: 所有章节列表
-  static Future cache(
-      ChapterService service, List<Chapter> _chapterList) async {
-    if(_chapterList.length == 0) {
+  static Future cache(ChapterService service) async {
+    if (chapterList.length == 0) {
       return;
     }
-    // 1.清除早期缓存
-    int oldIndex =
-        list.indexWhere((element) => element.currentUrl == service.currentUrl);
+
+    // 判断是否需要缓存
+    int oldIndex = list.indexWhere((e) => e.currentUrl == service.currentUrl);
+    if (oldIndex <= list.length - cacheLeftNum) {
+      return;
+    }
+
+    // 清除早期缓存
     if (oldIndex != -1) {
-      for (int i = oldIndex - 2; i >= 0; i--) {
-        try {
-          list.removeAt(i);
-        } catch (e) {}
+      for (int i = oldIndex - 4; i >= 0; i--) {
+        list.removeAt(i);
       }
     }
 
-    // 2.判断是否已经缓存
+    // 判断是否已经缓存
     // 不存在则缓存
     // 从下一章节开始缓存
     int index =
-        _chapterList.indexWhere((element) => element.url == service.chapterUrl);
+        chapterList.indexWhere((element) => element.url == service.chapterUrl);
     if (index == -1) {
       return;
     }
-    for (int i = index + 1; i < _chapterList.length && i < index + 1 + 4; i++) {
+    for (int i = index + 1;
+        i < chapterList.length && i < index + 1 + cacheNum;
+        i++) {
       int index2 =
-          list.indexWhere((element) => element.title == _chapterList[i].name);
+          list.indexWhere((element) => element.title == chapterList[i].name);
       if (index2 == -1) {
-        try {
-          var result = await HttpUtils.getInstance().get(
-              '/read?chapter_url=${Uri.encodeComponent(_chapterList[i].url)}&source=${service.source}');
-          DetailModel detailResult = DetailModel.fromJson(result.data);
-          list.add(detailResult.data);
-        } catch (e) {
-          print("章节缓存请求问题: " + e);
-        }
+        list.add(await getChapter(chapterList[i].url, service.source));
       }
     }
     return;
@@ -69,25 +68,34 @@ class ChapterService {
 
   /// 获得缓存内容
   static Future<Detail> getNextChapter(
-      Detail detail, String url, String source) async {
+      Detail detail, String url, String source, ChapterService service) async {
     if (detail == null) {
-      var result = await HttpUtils.getInstance()
-          .get('/read?chapter_url=${Uri.encodeComponent(url)}&source=$source');
-      DetailModel detailResult = DetailModel.fromJson(result.data);
-      return detailResult.data;
+      cache(service);
+      return await getChapter(url, source);
     } else {
       // 1.查找缓存
       int index = list.indexWhere((element) => element.currentUrl == url);
       if (index >= 0) {
-        return list[index];
+        Detail res = list[index];
+        cache(service);
+        return res;
       } else {
-        return getNextChapter(null, url, source);
+        return getNextChapter(null, url, source, service);
       }
     }
   }
 
-  /// 释放
-  static init() {
+  /// 在线请求章节内容
+  static Future<Detail> getChapter(String url, String source) async {
+    var result = await HttpUtils.getInstance()
+        .get('/read?chapter_url=${Uri.encodeComponent(url)}&source=$source');
+    DetailModel detailResult = DetailModel.fromJson(result.data);
+    return detailResult.data;
+  }
+
+  /// 初始化
+  static init(List<Chapter> ct) {
     list = [];
+    chapterList = ct;
   }
 }

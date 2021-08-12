@@ -1,4 +1,5 @@
 // import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dnovel_flutter/utils/global/global.dart';
 import 'package:dnovel_flutter/utils/exit.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -171,6 +172,7 @@ class _ShelfPageState extends State<ShelfPage> {
               source: novel.source,
               detailUrl: novel.detailUrl,
               fromPage: 'ShelfPage',
+              isShelf: true,
             ),
           ),
         ).then((value) => {
@@ -213,6 +215,7 @@ class _ShelfPageState extends State<ShelfPage> {
           _shelfList.remove(shelf);
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString('shelfList', jsonEncode(_shelfList));
+          prefs.remove(curPos(shelf.source, shelf.bookName));
           break;
         }
       }

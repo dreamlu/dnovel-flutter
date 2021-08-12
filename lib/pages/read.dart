@@ -1,5 +1,6 @@
 import 'package:dnovel_flutter/models/Shelf.dart';
 import 'package:dnovel_flutter/service/ChapterService.dart';
+import 'package:dnovel_flutter/utils/global/global.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +29,7 @@ class ReadPage extends StatefulWidget {
   final String source;
   final String bookName;
   final String fromPage;
+  final bool isShelf;
 
   ReadPage({
     this.shelfId,
@@ -36,6 +38,7 @@ class ReadPage extends StatefulWidget {
     this.source,
     this.bookName,
     this.fromPage = '',
+    this.isShelf = false,
   });
 
   @override
@@ -53,18 +56,22 @@ class _ReadPageState extends State<ReadPage> {
   String _backColor = 'daytime'; // 整体背景颜色
   bool _whetherNight = false; // 是否是黑夜
   ScrollController _controller; // 滚动条对象
-  String bookId;
-  String curPos;
+  String _pos;
+  SharedPreferences _prefs;
+  double _currPos = 0.0;
 
   @override
   void initState() {
-    ChapterService.init();
+    _initData();
     _fetchDetail(widget.url);
     _fetchChapterList(widget.detailUrl, widget.source);
-    _initData();
-    bookId = widget.bookName + widget.bookName;
-    curPos = bookId + '_curPos';
+    _pos = curPos(widget.source, widget.bookName);
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (_controller.hasClients) {
+    //     _controller.jumpTo(_prefs.getDouble(_pos) ?? 0);
+    //   }
+    // });
   }
 
   @override
@@ -79,8 +86,38 @@ class _ReadPageState extends State<ReadPage> {
     super.deactivate();
   }
 
+  _initData() async {
+    _prefs = await SharedPreferences.getInstance();
+    double fontSize = _prefs.getDouble('fontSize') ?? 20.0;
+    String bgColor = _prefs.getString('bgColor') ?? 'my_love';
+    String backColor = _prefs.getString('backColor') ?? 'daytime';
+    _currPos = _prefs.getDouble(_pos) ?? 0.0;
+    // _controller =
+    //     ScrollController(initialScrollOffset: _currPos, keepScrollOffset: false);
+    // _currPos = 0.0;
+    _prefs.setDouble(_pos, 0);
+    setState(() {
+      _fontSize = fontSize;
+      _bgColor = bgColor;
+      _backColor = backColor;
+    });
+  }
+
+  _saveData() async {
+    if (!widget.isShelf) {
+      return;
+    }
+    double _currPos = _controller.position.pixels;
+    _prefs.setDouble(_pos, _currPos);
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_controller != null) {
+      _controller.dispose();
+    }
+    _controller = ScrollController(
+        initialScrollOffset: _currPos, keepScrollOffset: false);
     Widget content;
     if (_detail == null) {
       content = Expanded(child: LoadingView());
@@ -347,9 +384,8 @@ class _ReadPageState extends State<ReadPage> {
                     builder: (ctx2) => _buildSettingsBottomSheet());
 
                 // 将字体大小、背景颜色保存到本地缓存中
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.setDouble('fontSize', _fontSize);
-                prefs.setString('bgColor', _bgColor);
+                _prefs.setDouble('fontSize', _fontSize);
+                _prefs.setString('bgColor', _bgColor);
               },
             ),
           ),
@@ -456,37 +492,31 @@ class _ReadPageState extends State<ReadPage> {
 
   _fetchDetail(String url, {Function post}) async {
     Detail oldDetail = _detail;
-    setState(() {
-      _detail = null;
-    });
-
-    try {
-      // 异步缓存提前加载章节
-      if(_chapterList.length > 0) {
-        ChapterService.cache(
-            ChapterService(
-                widget.bookName, widget.source, url, oldDetail.nextUrl),
-            _chapterList);
-      }
-
-
-      _detail =
-          await ChapterService.getNextChapter(oldDetail, url, widget.source);
-
-      // 异步存储当前书架书籍阅读进度
-      // 提前传递过来判断是否书架更好
-      Shelf.upRecentChapterUrl(widget.bookName, url);
-      if (post != null) {
-        // post();
-        // 优先跳转防止二次构建页面未加载,跳转失败,eg: ScrollController not attached to any scroll views.
-        if (_controller.hasClients) {
-          _controller.jumpTo(0);
-        }
-      }
-      setState(() {});
-    } catch (e) {
-      print(e);
+    if (_detail != null) {
+      setState(() {
+        _currPos = 0.0;
+        _detail = null;
+      });
     }
+
+    _detail = await ChapterService.getNextChapter(
+        oldDetail,
+        url,
+        widget.source,
+        ChapterService(
+            widget.bookName, widget.source, url, oldDetail?.nextUrl));
+
+    // 异步存储当前书架书籍阅读进度
+    // 提前传递过来判断是否书架更好
+    Shelf.upRecentChapterUrl(widget.bookName, url);
+    if (post != null) {
+      // post();
+      // 优先跳转防止二次构建页面未加载,跳转失败,eg: ScrollController not attached to any scroll views.
+      if (_controller.hasClients) {
+        _controller.jumpTo(0);
+      }
+    }
+    setState(() {});
   }
 
   // 异步加载请求章节列表数据
@@ -498,36 +528,14 @@ class _ReadPageState extends State<ReadPage> {
 
       setState(() {
         _chapterList = chapterResult.data;
+        ChapterService.init(_chapterList);
         // 异步缓存提前加载章节
         ChapterService.cache(
-            ChapterService(
-                widget.bookName, widget.source, widget.url, ''),
-            _chapterList);
+            ChapterService(widget.bookName, widget.source, widget.url, ''));
       });
     } catch (e) {
       print(e);
     }
-  }
-
-  _initData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    double fontSize = prefs.getDouble('fontSize') ?? 20.0;
-    String bgColor = prefs.getString('bgColor') ?? 'my_love';
-    String backColor = prefs.getString('backColor') ?? 'daytime';
-    double currPos = prefs.getDouble(curPos) ?? 0.0;
-    _controller =
-        ScrollController(initialScrollOffset: currPos, keepScrollOffset: false);
-    setState(() {
-      _fontSize = fontSize;
-      _bgColor = bgColor;
-      _backColor = backColor;
-    });
-  }
-
-  _saveData() async {
-    double _currPos = _controller.position.pixels;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setDouble(curPos, _currPos);
   }
 }
 
