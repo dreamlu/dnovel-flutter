@@ -47,3 +47,17 @@ extension widthExtention on int {
     return ScreenUtil().setSp(this);
   }
 }
+
+extension doubleExtention on double {
+  get w {
+    return ScreenUtil().setWidth(this);
+  }
+
+  get h {
+    return ScreenUtil().setWidth(this);
+  }
+
+  get sp {
+    return ScreenUtil().setSp(this);
+  }
+}
