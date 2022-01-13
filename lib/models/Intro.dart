@@ -1,4 +1,3 @@
-import 'package:dnovel_flutter/models/Chapter.dart';
 
 class IntroModel {
   late int code;

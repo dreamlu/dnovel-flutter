@@ -1,12 +1,13 @@
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dnovel_flutter/utils/global/global.dart';
 import 'package:dnovel_flutter/utils/exit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import './read.dart';
 import '../models/Shelf.dart';
 import '../utils/color.dart';
+import '../utils/extension/extension.dart';
 import '../components/LoadingView.dart';
 
 class ShelfPage extends StatefulWidget {
@@ -60,7 +61,10 @@ class _ShelfPageState extends State<ShelfPage> {
   PreferredSizeWidget _buildAppBar() {
     List<Widget> actions = [];
     if (_shelfList.length > 0) {
-      actions.add(FlatButton(
+      actions.add(TextButton(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+        ),
         child: Text(
           _whetherDelete ? '完成' : '编辑',
           style: TextStyle(color: Colors.black45),
@@ -81,26 +85,28 @@ class _ShelfPageState extends State<ShelfPage> {
       backgroundColor: MyColor.bgColor,
       elevation: 0,
       actions: actions,
-      brightness: Brightness.light,
+      systemOverlayStyle:
+          SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
     );
   }
 
   Widget _buildEmpty() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: ListView(
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: 150.h),
           Image(
-            width: 150.0,
-            height: 150.0,
+            width: 249.w,
+            height: 249.h,
             image: AssetImage("lib/images/empty.png"),
           ),
-          Padding(
+          SizedBox(height: 10.h),
+          Center(
             child: Text(
               '书架空空，去书屋逛逛吧~~',
               style: TextStyle(color: MyColor.linkColor),
             ),
-            padding: EdgeInsets.symmetric(vertical: 60.0),
           )
         ],
       ),
@@ -121,7 +127,7 @@ class _ShelfPageState extends State<ShelfPage> {
   Widget _buildShelfItem(Shelf novel) {
     List<Widget> content = [];
     var img;
-    if (novel.bookCoverUrl == null || novel.bookCoverUrl == "") {
+    if (novel.bookCoverUrl == "") {
       img = Image.asset("lib/images/cover.png");
     } else {
       try {

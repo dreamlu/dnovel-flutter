@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import './intro.dart';
 import '../models/Search.dart';
 import '../utils/request.dart';
@@ -48,30 +49,31 @@ class _SearchPageState extends State<SearchPage> {
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: MyColor.bgColor,
-      brightness: Brightness.light,
+      systemOverlayStyle:
+          SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
       elevation: 0,
       leading: IconButton(
         icon: Icon(Icons.chevron_left),
         color: MyColor.iconColor,
-        iconSize: 32,
+        iconSize: 60.w,
         onPressed: () {
           Navigator.pop(context);
         },
       ),
       titleSpacing: 0,
       title: Padding(
-        padding: EdgeInsets.only(top: 12.0, bottom: 12.0, right: 30.0),
+        padding: EdgeInsets.only(top: 18.h, bottom: 18.h, right: 50.w),
         child: TextField(
           controller: _keywordController,
           textInputAction: TextInputAction.search,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black12),
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(50.w),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.black45),
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(50.w),
             ),
             hintText: '小说名/作者名',
             hintStyle: TextStyle(color: Colors.black26),
@@ -139,8 +141,6 @@ class _SearchPageState extends State<SearchPage> {
     });
 
     try {
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-
       var result = await HttpUtils.getInstance().get('/search?k=$keyword');
       SearchModel searchResult = SearchModel.fromJson(result.data);
 
@@ -169,11 +169,11 @@ class NavTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 20.h),
       child: Text(title,
           style: TextStyle(
             color: Color.fromRGBO(80, 80, 80, 100),
-            fontSize: 14.0,
+            fontSize: 25.sp,
             fontWeight: FontWeight.bold,
           )),
     );

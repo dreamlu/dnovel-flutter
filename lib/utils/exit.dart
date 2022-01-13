@@ -5,8 +5,7 @@ class Exit {
   static DateTime _lastPressedAt = DateTime.now();
 
   static Future<bool> isExit() async {
-    if (_lastPressedAt == null ||
-        DateTime.now().difference(_lastPressedAt) > Duration(seconds: 3)) {
+    if (DateTime.now().difference(_lastPressedAt) > Duration(seconds: 3)) {
       Fluttertoast.showToast(
         // fontSize: 12.0,
         msg: "再按一次退出程序",

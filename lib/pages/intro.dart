@@ -1,6 +1,7 @@
 import 'package:dnovel_flutter/components/ImageNetwork.dart';
 import 'package:dnovel_flutter/models/Shelf.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -8,7 +9,6 @@ import './read.dart';
 import '../models/Intro.dart';
 import '../utils/color.dart';
 import '../utils/request.dart';
-import '../components/NovelItem.dart';
 import '../components/LoadingView.dart';
 
 class IntroPage extends StatefulWidget {
@@ -53,14 +53,14 @@ class _IntroPageState extends State<IntroPage> {
         color: MyColor.bgColor,
         child: content,
       ),
-      bottomSheet: _intro != null ? _buildBottomSheet() : null,
+      bottomSheet: _intro.source != '' ? _buildBottomSheet() : null,
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: MyColor.bgColor,
-      brightness: Brightness.light,
+      systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
       elevation: 0,
       title: Text('详情页', style: TextStyle(color: MyColor.appBarTitle)),
       leading: IconButton(
@@ -262,8 +262,11 @@ class _IntroPageState extends State<IntroPage> {
       // 初始化时判断是否在书架
       // 将书架阅读的最近url覆盖
       Shelf shelf = await Shelf.isExist(introResult.data?.bookName ?? '');
-      isShelf = 1;
-      _intro.recentChapterUrl = shelf.recentChapterUrl;
+      if (shelf.source != '') {
+        isShelf = 1;
+        _intro.recentChapterUrl = shelf.recentChapterUrl;
+      }
+
       setState(() {});
     } catch (e) {
       print(e);

@@ -26,7 +26,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
   List<ChapterPagenation> _bigPageList = []; // 大分页列表
   ChapterPagenation _bigPage = new ChapterPagenation(); // 当前大分页
   bool _whetherShowBigPage = false; // 是否显示大分页
-  double _chapterHeight = 40;
+  double _chapterHeight = 80.h;
 
   ScrollController? controller; // 滚动条位置
 
@@ -42,7 +42,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     return Drawer(
       child: Column(
         children: <Widget>[
-          SizedBox(height: 20.0),
+          SizedBox(height: 30.h),
           _buildChapterDrawerHeader(),
           _buildChapterDrawerPageBtn(),
           Divider(),
@@ -54,20 +54,23 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
 
   Widget _buildChapterDrawerHeader() {
     return Container(
-      padding: EdgeInsets.only(left: 15.0),
-      height: 95.h,
+      padding: EdgeInsets.only(left: 25.w),
+      height: 150.h,
       alignment: Alignment.centerLeft,
-      child: ListView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          SizedBox(height: 50.h),
           Text(
             widget.bookName,
             style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 30.sp,
               color: Colors.black87,
             ),
-            maxLines: 2,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 5.h),
           Text(
             '共' + _all.length.toString() + '章',
             style: TextStyle(fontWeight: FontWeight.w600),
@@ -80,10 +83,10 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
   Widget _buildChapterDrawerPageBtn() {
     List<Widget> content = [];
 
-    content.add(FlatButton(
+    content.add(TextButton(
       child: Text(
         _whetherShowBigPage ? '切换小分页' : '切换大分页(${_bigPage.desc})',
-        style: TextStyle(fontSize: 16.0, color: Colors.black54),
+        style: TextStyle(fontSize: 30.sp, color: Colors.black54),
       ),
       onPressed: () {
         setState(() {
@@ -93,7 +96,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     ));
 
     if (_whetherShowBigPage == false) {
-      content.add(FlatButton(
+      content.add(TextButton(
         child: Text(
           _order == 'asc' ? '降序' : '升序',
           style: TextStyle(color: Colors.black54),
@@ -129,7 +132,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
   Widget _buildBigPaging() {
     return Expanded(
       child: GridView.count(
-        padding: const EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(15.0.h),
         crossAxisCount: 2,
         crossAxisSpacing: 4.0,
         mainAxisSpacing: 4.0,
@@ -143,12 +146,12 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
               color: Colors.white,
               alignment: Alignment.center,
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: 5.0),
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                margin: EdgeInsets.symmetric(vertical: 5.0.w),
+                padding: EdgeInsets.symmetric(vertical: 10.0.w, horizontal: 15.0.w),
                 child: Text(
                   _page.desc,
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 30.sp,
                     fontWeight: FontWeight.w400,
                     color: _page.desc == _bigPage.desc
                         ? Colors.red
@@ -177,10 +180,10 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     return Expanded(
       child: ListView.separated(
         controller: controller,
-        padding: const EdgeInsets.only(left: 15.0),
+        padding: EdgeInsets.only(left: 25.0.w),
         itemCount: _smallPageList.length,
         separatorBuilder: (BuildContext context, int index) =>
-            Divider(height: 10),
+            Divider(height: 15.h),
         itemBuilder: (BuildContext context, int index) {
           Chapter _page = _smallPageList[index];
           return SizedBox(
@@ -209,7 +212,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     int index = _smallPageList
         .indexWhere((Chapter item) => item.name.trim() == widget.title?.trim());
     // ListTile 每行高度默认 72.0
-    double value = (_chapterHeight + 10) * index - 260; // 尽量居中显示
+    double value = (_chapterHeight + 15.h) * index - 330.h; // 尽量居中显示
     if (value < 0) {
       value = 0;
     }

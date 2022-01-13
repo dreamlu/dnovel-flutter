@@ -1,12 +1,9 @@
 // 章节服务
-import 'dart:convert';
 
 import 'package:dnovel_flutter/models/Chapter.dart';
 import 'package:dnovel_flutter/models/Detail.dart';
 import 'package:dnovel_flutter/utils/request.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-const String _chapterStore = "chapter_store";
 List<Detail> list = []; // 缓存列表
 List<Chapter> chapterList = []; // 章节列表
 const int cacheNum = 6; // 缓存数量

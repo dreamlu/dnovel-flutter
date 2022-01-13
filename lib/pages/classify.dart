@@ -1,5 +1,6 @@
 import 'package:dnovel_flutter/utils/exit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import './intro.dart';
 import '../models/Classify.dart';
 import '../models/Novel.dart';
@@ -48,7 +49,7 @@ class _ClassifyPageState extends State<ClassifyPage> {
         style: TextStyle(color: MyColor.appBarTitle),
       ),
       backgroundColor: MyColor.bgColor,
-      brightness: Brightness.light,
+      systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
       elevation: 0,
       actions: <Widget>[
         IconButton(
@@ -76,7 +77,7 @@ class _ClassifyPageState extends State<ClassifyPage> {
   Widget _buildClassifyItem({item, index}) {
     bool _isCurrent = _selectedClassifyName == item.name;
     return Container(
-      child: FlatButton(
+      child: TextButton(
         onPressed: () {
           setState(() {
             _selectedClassifyName = item.name;

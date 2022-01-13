@@ -1,11 +1,9 @@
 import 'package:dnovel_flutter/models/Shelf.dart';
 import 'package:dnovel_flutter/service/ChapterService.dart';
 import 'package:dnovel_flutter/utils/global/global.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/ChapterDrawer.dart';
@@ -51,7 +49,7 @@ class _ReadPageState extends State<ReadPage> {
   Detail? _detail; // 小说内容：标题、内容、上一章url、下一章url
 
   // 阅读设置
-  double _fontSize = 20.0; // 字体
+  double _fontSize = 37.0.h; // 字体
   String _bgColor = 'my_love'; // 字体背景颜色
   String _backColor = 'daytime'; // 整体背景颜色
   bool _whetherNight = false; // 是否是黑夜
@@ -67,11 +65,6 @@ class _ReadPageState extends State<ReadPage> {
     _fetchChapterList(widget.detailUrl, widget.source);
     _pos = curPos(widget.source, widget.bookName);
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (_controller.hasClients) {
-    //     _controller.jumpTo(_prefs.getDouble(_pos) ?? 0);
-    //   }
-    // });
   }
 
   @override
@@ -88,13 +81,10 @@ class _ReadPageState extends State<ReadPage> {
 
   _initData() async {
     _prefs = await SharedPreferences.getInstance();
-    double fontSize = _prefs?.getDouble('fontSize') ?? 20.0;
+    double fontSize = _prefs?.getDouble('fontSize') ?? _fontSize;
     String bgColor = _prefs?.getString('bgColor') ?? 'my_love';
     String backColor = _prefs?.getString('backColor') ?? 'daytime';
     _currPos = _prefs?.getDouble(_pos) ?? 0.0;
-    // _controller =
-    //     ScrollController(initialScrollOffset: _currPos, keepScrollOffset: false);
-    // _currPos = 0.0;
     _prefs?.setDouble(_pos, 0);
     setState(() {
       _fontSize = fontSize;
@@ -126,7 +116,6 @@ class _ReadPageState extends State<ReadPage> {
     }
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // statusBarColor: Colors.transparent, // 透明
       statusBarIconBrightness: Brightness.light,
     ));
 
@@ -159,7 +148,7 @@ class _ReadPageState extends State<ReadPage> {
           color: backColor,
           child: Column(
             children: <Widget>[
-              SizedBox(height: 15),
+              SizedBox(height: 25.0.h),
               _buildHeader(),
               content,
               _buildFooter(),
@@ -175,7 +164,7 @@ class _ReadPageState extends State<ReadPage> {
         color: backColor,
         child: Column(
           children: <Widget>[
-            SizedBox(height: 15),
+            SizedBox(height: 25.0.h),
             _buildHeader(),
             content,
             _buildFooter(),
@@ -187,12 +176,12 @@ class _ReadPageState extends State<ReadPage> {
 
   Widget _buildHeader() {
     return Container(
-      margin: EdgeInsets.only(bottom: 10.0),
+      margin: EdgeInsets.only(bottom: 5.0.h, top: 35.0.h),
       // decoration: BoxDecoration(
       //   border: Border(bottom: BorderSide(color: Colors.black26)),
       // ),
       // alignment: Alignment.center,
-      height: 20.0,
+      height: 40.0.h,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -297,21 +286,13 @@ class _ReadPageState extends State<ReadPage> {
             ],
           ),
         ),
-        // onTap: () {
-        //   showModalBottomSheet(
-        //     context: ctx,
-        //     builder: (ctx2) => _buildMenuBottomSheet(ctx),
-        //   );
-        // },
-        // ),
       ),
     );
   }
 
   Widget _buildFooter() {
     return Container(
-      height: 40,
-      margin: EdgeInsets.only(top: 10.0),
+      height: 70.0.h,
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: Colors.black26)),
       ),
@@ -320,7 +301,7 @@ class _ReadPageState extends State<ReadPage> {
         direction: Axis.horizontal,
         children: <Widget>[
           Expanded(
-            child: FlatButton(
+            child: TextButton(
               // padding: EdgeInsets.all(0),
               child: Text('上一章', style: TextStyle(color: Colors.black54)),
               onPressed: () {
@@ -334,7 +315,7 @@ class _ReadPageState extends State<ReadPage> {
             ),
           ),
           Expanded(
-            child: FlatButton(
+            child: TextButton(
               child: Text('下一章', style: TextStyle(color: Colors.black54)),
               onPressed: () {
                 if (_detail?.nextUrl == '' ||
@@ -353,8 +334,8 @@ class _ReadPageState extends State<ReadPage> {
 
   Widget _buildMenuBottomSheet(BuildContext ctx) {
     return Container(
-      height: 90,
-      padding: EdgeInsets.symmetric(vertical: 20.0),
+      height: 160.0.h,
+      padding: EdgeInsets.symmetric(vertical: 30.0.h),
       child: Flex(
         // mainAxisAlignment: MainAxisAlignment.spaceAround,
         direction: Axis.horizontal,
@@ -412,8 +393,8 @@ class _ReadPageState extends State<ReadPage> {
 
   Widget _buildSettingsBottomSheet() {
     return Container(
-      height: 150.0,
-      padding: EdgeInsets.symmetric(horizontal: 10.0),
+      height: 280.0.h,
+      padding: EdgeInsets.symmetric(horizontal: 20.0.h),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -422,12 +403,12 @@ class _ReadPageState extends State<ReadPage> {
             children: <Widget>[
               Text(
                 '字体',
-                style: TextStyle(fontSize: 24.0),
+                style: TextStyle(fontSize: 38.0.sp),
               ),
               IconButton(
                 icon: Icon(
                   Icons.add,
-                  size: 30,
+                  size: 50.0.h,
                 ),
                 onPressed: () {
                   setState(() {
@@ -437,8 +418,8 @@ class _ReadPageState extends State<ReadPage> {
               ),
               IconButton(
                 icon: Icon(
-                  Icons.minimize,
-                  size: 30,
+                  Icons.indeterminate_check_box_rounded,
+                  size: 50.0.h,
                 ),
                 onPressed: () {
                   setState(() {
@@ -499,12 +480,8 @@ class _ReadPageState extends State<ReadPage> {
       });
     }
 
-    _detail = await ChapterService.getNextChapter(
-        oldDetail,
-        url,
-        widget.source,
-        ChapterService(
-            widget.bookName, widget.source, url, oldDetail.nextUrl ?? ''));
+    _detail = await ChapterService.getNextChapter(oldDetail, url, widget.source,
+        ChapterService(widget.bookName, widget.source, url, oldDetail.nextUrl));
 
     // 异步存储当前书架书籍阅读进度
     // 提前传递过来判断是否书架更好
@@ -567,7 +544,7 @@ class BgColorItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        height: 50,
+        height: 90.0.h,
         width: MediaQuery.of(context).size.width / 4 - 20,
         decoration: BoxDecoration(
           color: color,

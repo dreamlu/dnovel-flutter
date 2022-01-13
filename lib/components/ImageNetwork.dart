@@ -34,7 +34,7 @@ class _StateImageWidget extends State<ImageNetwork> {
 
   @override
   void initState() {
-    widget.src = widget.src == null ? '' : widget.src;
+    // widget.src = widget.src == null ? '' : widget.src;
     super.initState();
   }
 
@@ -89,7 +89,7 @@ class _StateImageWidget extends State<ImageNetwork> {
   }
 
   _rightTop(w) {
-    return Stack(overflow: Overflow.visible, children: [
+    return Stack(clipBehavior: Clip.none, children: [
       w,
       Positioned(
           top: -8,

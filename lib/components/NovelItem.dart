@@ -32,7 +32,7 @@ class NovelItem extends StatelessWidget {
       try {
         img = ClipRRect(
           borderRadius: BorderRadius.circular(4),
-          child: Image.network(bookCoverUrl!),
+          child: Image.network(bookCoverUrl),
         ); // CachedNetworkImage(imageUrl: novel.bookCoverUrl); //Image.network(novel.bookCoverUrl);
       } catch (e) {
         img = Image.asset("lib/images/empty.png");
@@ -56,7 +56,7 @@ class NovelItem extends StatelessWidget {
                 Text("来源: " + source, style: TextStyle(color: Colors.black26)),
               ]),
               SizedBox(height: 5.h),
-              desc == null
+              desc == ''
                   ? SizedBox()
                   : Text(
                       desc.contains("简介") ? desc : '简介：' + desc,
