@@ -4,11 +4,15 @@ import 'package:dnovel_flutter/utils/extension/extension.dart';
 
 class ChapterDrawer extends StatefulWidget {
   final String bookName;
-  final String title;
+  final String? title;
   final List<Chapter> chapterList;
-  final Function onTap;
+  final Function? onTap;
 
-  ChapterDrawer({this.bookName, this.title, this.chapterList, this.onTap});
+  ChapterDrawer(
+      {this.bookName = '',
+      this.title,
+      this.chapterList = const [],
+      this.onTap});
 
   @override
   State createState() => _ChapterDrawerState();
@@ -24,7 +28,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
   bool _whetherShowBigPage = false; // 是否显示大分页
   double _chapterHeight = 40;
 
-  ScrollController controller; // 滚动条位置
+  ScrollController? controller; // 滚动条位置
 
   @override
   void initState() {
@@ -191,7 +195,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
               contentPadding: EdgeInsets.zero,
               onTap: () {
                 Navigator.of(context).pop();
-                widget.onTap(_page.url);
+                widget.onTap!(_page.url);
               },
             ),
           );
@@ -203,13 +207,13 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
   _initData() async {
     await _initPaging();
     int index = _smallPageList
-        .indexWhere((Chapter item) => item.name.trim() == widget.title.trim());
+        .indexWhere((Chapter item) => item.name.trim() == widget.title?.trim());
     // ListTile 每行高度默认 72.0
     double value = (_chapterHeight + 10) * index - 260; // 尽量居中显示
     if (value < 0) {
       value = 0;
     }
-    controller.jumpTo(value);
+    controller?.jumpTo(value);
   }
 
   _initPaging() {
@@ -219,7 +223,7 @@ class _ChapterDrawerState extends State<ChapterDrawer> {
     }
 
     int index = chapterList
-        .indexWhere((Chapter item) => item.name.trim() == widget.title.trim());
+        .indexWhere((Chapter item) => item.name.trim() == widget.title?.trim());
     if (index == -1) {
       index = 0;
     }

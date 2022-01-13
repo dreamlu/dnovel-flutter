@@ -69,7 +69,7 @@ class ChapterService {
   /// 获得缓存内容
   static Future<Detail> getNextChapter(
       Detail detail, String url, String source, ChapterService service) async {
-    if (detail == null) {
+    if (detail.title == '') {
       cache(service);
       return await getChapter(url, source);
     } else {
@@ -80,7 +80,7 @@ class ChapterService {
         cache(service);
         return res;
       } else {
-        return getNextChapter(null, url, source, service);
+        return getNextChapter(Detail(), url, source, service);
       }
     }
   }

@@ -1,17 +1,17 @@
 class ChapterModel {
-  int code;
-  String message;
-  List<Chapter> data;
+  late int code;
+  late String message;
+  late List<Chapter>? data;
 
-  ChapterModel({this.code, this.message, this.data});
+  ChapterModel({this.code = 0, this.message = '', this.data});
 
   ChapterModel.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<Chapter>();
+      data = <Chapter>[];
       json['data'].forEach((v) {
-        data.add(new Chapter.fromJson(v));
+        data?.add(new Chapter.fromJson(v));
       });
     }
   }
@@ -22,7 +22,7 @@ class Chapter {
   String name;
   String url;
 
-  Chapter({this.name, this.url});
+  Chapter({this.name = '', this.url = ''});
 
   factory Chapter.fromJson(Map<String, dynamic> json) {
     return Chapter(
@@ -38,5 +38,5 @@ class ChapterPagenation {
   int end;
   String desc;
 
-  ChapterPagenation({this.start, this.end, this.desc});
+  ChapterPagenation({this.start = 0, this.end = 0, this.desc = ''});
 }

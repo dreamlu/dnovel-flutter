@@ -17,7 +17,7 @@ dnovel 是一个简洁，干净的小说聚合系统
 ![界面](lib/images/dnovel_qrcode.jpeg)  
 
 ### 开发  
-1.flutter 1.22.6  
+1.flutter 2.9  
 2.修改`lib/utils/request.dart`中api路径为搭建的上述后端地址api  
 
 ## TODO

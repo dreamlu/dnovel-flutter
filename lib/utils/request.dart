@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
  */
 class HttpUtils {
   /// global dio object
-  static Dio dio;
+  static Dio dio = Dio();
 
   /// default options
   static const String API_PREFIX = 'http://xxx/api';
@@ -20,15 +20,15 @@ class HttpUtils {
 
   /// 创建 dio 实例对象
   static Dio getInstance() {
-    if (dio == null) {
-      dio = new Dio();
+    // if (dio == null) {
+      // dio = new Dio();
 
       dio.options.baseUrl = API_PREFIX;
       dio.options.connectTimeout = CONNECT_TIMEOUT;
       dio.options.receiveTimeout = RECEIVE_TIMEOUT;
 
       dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
-    }
+    // }
     return dio;
   }
 }

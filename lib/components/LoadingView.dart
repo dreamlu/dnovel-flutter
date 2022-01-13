@@ -2,8 +2,8 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
 class LoadingView extends StatefulWidget {
-  final double width;
-  final Color color;
+  final double? width;
+  final Color? color;
 
   LoadingView({this.width, this.color});
 
@@ -21,15 +21,16 @@ class BallPulseIndicatorState extends State<LoadingView>
   static int delay = 300;
   static double scaleBegin = 0.7;
   static double scaleEnd = 1;
-  Paint paint;
-  double width;
-  Color color;
-  Size size;
+  Paint? paint;
+  double? width;
+  Color? color;
+  Size? size;
 
-  BallPulseIndicatorState({this.width, this.color});
+  BallPulseIndicatorState(
+      {this.width, this.color, this.animation, this.controller, this.paint});
 
-  Animation<double> animation;
-  AnimationController controller;
+  Animation<double>? animation;
+  AnimationController? controller;
 
   @override
   void initState() {
@@ -38,15 +39,15 @@ class BallPulseIndicatorState extends State<LoadingView>
     _initPaint();
     _initAnimation();
 
-    double d = this.width / (3 + spaceRatio * 2);
-    this.size = Size(this.width, d);
+    double d = this.width! / (3 + spaceRatio * 2);
+    this.size = Size(this.width!, d);
     super.initState();
   }
 
   void _initPaint() {
     paint = Paint()
       ..style = PaintingStyle.fill
-      ..color = this.color
+      ..color = this.color!
       ..strokeWidth = 1;
   }
 
@@ -54,40 +55,39 @@ class BallPulseIndicatorState extends State<LoadingView>
     controller = AnimationController(
         duration: Duration(milliseconds: BallPulseIndicatorState.duration),
         vsync: this);
-    animation = Tween<double>(begin: 0, end: 2).animate(controller)
+    animation = Tween<double>(begin: 0, end: 2).animate(controller!)
       ..addListener(() {
         setState(() {});
       });
 
-    controller.repeat();
+    controller?.repeat();
   }
 
   @override
   Widget build(BuildContext context) {
     BallPulseIndicatorPainter painter =
-    BallPulseIndicatorPainter(this.animation);
-    painter.myPaint = this.paint;
+        BallPulseIndicatorPainter(this.animation!, this.paint!);
     return Center(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            CustomPaint(
-              painter: painter,
-              size: this.size,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Text(
-                '正在加载',
-                style: TextStyle(fontSize: 20),
-              ),
-            )
-          ],
-        ));
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        CustomPaint(
+          painter: painter,
+          size: this.size!,
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 10.0),
+          child: Text(
+            '正在加载',
+            style: TextStyle(fontSize: 20),
+          ),
+        )
+      ],
+    ));
   }
 
   dispose() {
-    controller.dispose();
+    controller?.dispose();
     super.dispose();
   }
 }
@@ -96,7 +96,7 @@ class BallPulseIndicatorPainter extends CustomPainter {
   Paint myPaint;
   Animation<double> animation;
 
-  BallPulseIndicatorPainter(this.animation);
+  BallPulseIndicatorPainter(this.animation, this.myPaint);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -109,7 +109,7 @@ class BallPulseIndicatorPainter extends CustomPainter {
     double firstScaleValue;
     double firstTempR;
     double scaleGap = (BallPulseIndicatorState.scaleEnd -
-        BallPulseIndicatorState.scaleBegin) /
+            BallPulseIndicatorState.scaleBegin) /
         BallPulseIndicatorState.duration *
         BallPulseIndicatorState.delay;
     double secondScaleValue;

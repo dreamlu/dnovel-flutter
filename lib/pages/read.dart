@@ -32,11 +32,11 @@ class ReadPage extends StatefulWidget {
   final bool isShelf;
 
   ReadPage({
-    this.shelfId,
-    this.url,
-    this.detailUrl,
-    this.source,
-    this.bookName,
+    this.shelfId = 0,
+    this.url = '',
+    this.detailUrl = '',
+    this.source = '',
+    this.bookName = '',
     this.fromPage = '',
     this.isShelf = false,
   });
@@ -48,16 +48,16 @@ class ReadPage extends StatefulWidget {
 // 沉浸式页面
 class _ReadPageState extends State<ReadPage> {
   List<Chapter> _chapterList = [];
-  Detail _detail; // 小说内容：标题、内容、上一章url、下一章url
+  Detail? _detail; // 小说内容：标题、内容、上一章url、下一章url
 
   // 阅读设置
   double _fontSize = 20.0; // 字体
   String _bgColor = 'my_love'; // 字体背景颜色
   String _backColor = 'daytime'; // 整体背景颜色
   bool _whetherNight = false; // 是否是黑夜
-  ScrollController _controller; // 滚动条对象
-  String _pos;
-  SharedPreferences _prefs;
+  ScrollController? _controller; // 滚动条对象
+  String _pos = '';
+  SharedPreferences? _prefs;
   double _currPos = 0.0;
 
   @override
@@ -76,7 +76,7 @@ class _ReadPageState extends State<ReadPage> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -88,14 +88,14 @@ class _ReadPageState extends State<ReadPage> {
 
   _initData() async {
     _prefs = await SharedPreferences.getInstance();
-    double fontSize = _prefs.getDouble('fontSize') ?? 20.0;
-    String bgColor = _prefs.getString('bgColor') ?? 'my_love';
-    String backColor = _prefs.getString('backColor') ?? 'daytime';
-    _currPos = _prefs.getDouble(_pos) ?? 0.0;
+    double fontSize = _prefs?.getDouble('fontSize') ?? 20.0;
+    String bgColor = _prefs?.getString('bgColor') ?? 'my_love';
+    String backColor = _prefs?.getString('backColor') ?? 'daytime';
+    _currPos = _prefs?.getDouble(_pos) ?? 0.0;
     // _controller =
     //     ScrollController(initialScrollOffset: _currPos, keepScrollOffset: false);
     // _currPos = 0.0;
-    _prefs.setDouble(_pos, 0);
+    _prefs?.setDouble(_pos, 0);
     setState(() {
       _fontSize = fontSize;
       _bgColor = bgColor;
@@ -107,14 +107,14 @@ class _ReadPageState extends State<ReadPage> {
     if (!widget.isShelf) {
       return;
     }
-    double _currPos = _controller.position.pixels;
-    _prefs.setDouble(_pos, _currPos);
+    double _currPos = _controller?.position.pixels ?? 0;
+    _prefs?.setDouble(_pos, _currPos);
   }
 
   @override
   Widget build(BuildContext context) {
     if (_controller != null) {
-      _controller.dispose();
+      _controller?.dispose();
     }
     _controller = ScrollController(
         initialScrollOffset: _currPos, keepScrollOffset: false);
@@ -134,7 +134,7 @@ class _ReadPageState extends State<ReadPage> {
       body: _buildColorContent(content),
       drawer: ChapterDrawer(
         bookName: widget.bookName,
-        title: _detail != null ? _detail.title : '',
+        title: _detail != null ? _detail?.title : '',
         chapterList: _chapterList,
         onTap: (String url) {
           _fetchDetail(url, post: () {});
@@ -211,7 +211,7 @@ class _ReadPageState extends State<ReadPage> {
           Expanded(
               // 文字省略号失效解决
               child: Text(
-            _detail != null ? _detail.title : '',
+            _detail != null ? _detail?.title ?? '' : '',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           )),
@@ -231,7 +231,7 @@ class _ReadPageState extends State<ReadPage> {
                   controller: _controller,
                   children: <Widget>[
                     Html(
-                      data: "<font>" + _detail.content + "</font>",
+                      data: "<font>" + _detail!.content + "</font>",
                       style: {
                         "html": Style(
                           fontSize: FontSize(_fontSize),
@@ -239,10 +239,10 @@ class _ReadPageState extends State<ReadPage> {
                         ),
                         "font": Style(
                           // 添加一个标签防止content中没有<p>来进行行高设置
-                          lineHeight: 1.3,
+                          lineHeight: LineHeight(1.3),
                         ),
                         "p": Style(
-                          lineHeight: 1.5,
+                          lineHeight: LineHeight(1.3),
                         ),
                       },
                     ),
@@ -255,11 +255,12 @@ class _ReadPageState extends State<ReadPage> {
                 children: [
                   Expanded(child: GestureDetector(
                     onTap: () {
-                      double value = _controller.offset - ctx.size.height;
+                      double value =
+                          _controller?.offset ?? 0 - ctx.size!.height;
                       if (value < 0) {
                         value = 0;
                       }
-                      _controller.animateTo(value,
+                      _controller?.animateTo(value,
                           duration: Duration(milliseconds: 300),
                           curve: Curves.ease);
                     },
@@ -281,11 +282,12 @@ class _ReadPageState extends State<ReadPage> {
                   ),
                   Expanded(child: GestureDetector(
                     onTap: () {
-                      double value = _controller.offset + ctx.size.height;
+                      double value =
+                          _controller?.offset ?? 0 + ctx.size!.height;
                       if (value < 0) {
                         value = 0;
                       }
-                      _controller.animateTo(value,
+                      _controller?.animateTo(value,
                           duration: Duration(milliseconds: 300),
                           curve: Curves.ease);
                     },
@@ -322,13 +324,12 @@ class _ReadPageState extends State<ReadPage> {
               // padding: EdgeInsets.all(0),
               child: Text('上一章', style: TextStyle(color: Colors.black54)),
               onPressed: () {
-                if (_detail.prevUrl == null ||
-                    _detail.prevUrl == '' ||
-                    _detail.prevUrl.contains('.html') == false) {
+                if (_detail?.prevUrl == '' ||
+                    _detail?.prevUrl.contains('.html') == false) {
                   DialogUtils.showToastDialog(context, text: '当前是第一章了哦~');
                   return;
                 }
-                _fetchDetail(_detail.prevUrl, post: () {});
+                _fetchDetail(_detail?.prevUrl ?? '', post: () {});
               },
             ),
           ),
@@ -336,13 +337,12 @@ class _ReadPageState extends State<ReadPage> {
             child: FlatButton(
               child: Text('下一章', style: TextStyle(color: Colors.black54)),
               onPressed: () {
-                if (_detail.nextUrl == null ||
-                    _detail.nextUrl == '' ||
-                    _detail.nextUrl.contains('.html') == false) {
+                if (_detail?.nextUrl == '' ||
+                    _detail?.nextUrl.contains('.html') == false) {
                   DialogUtils.showToastDialog(context, text: '已经是最新章节了哦~');
                   return;
                 }
-                _fetchDetail(_detail.nextUrl, post: () {});
+                _fetchDetail(_detail?.nextUrl ?? '', post: () {});
               },
             ),
           ),
@@ -384,8 +384,8 @@ class _ReadPageState extends State<ReadPage> {
                     builder: (ctx2) => _buildSettingsBottomSheet());
 
                 // 将字体大小、背景颜色保存到本地缓存中
-                _prefs.setDouble('fontSize', _fontSize);
-                _prefs.setString('bgColor', _bgColor);
+                _prefs?.setDouble('fontSize', _fontSize);
+                _prefs?.setString('bgColor', _bgColor);
               },
             ),
           ),
@@ -490,8 +490,8 @@ class _ReadPageState extends State<ReadPage> {
     );
   }
 
-  _fetchDetail(String url, {Function post}) async {
-    Detail oldDetail = _detail;
+  _fetchDetail(String url, {Function? post}) async {
+    Detail oldDetail = _detail ?? Detail();
     if (_detail != null) {
       setState(() {
         _currPos = 0.0;
@@ -504,7 +504,7 @@ class _ReadPageState extends State<ReadPage> {
         url,
         widget.source,
         ChapterService(
-            widget.bookName, widget.source, url, oldDetail?.nextUrl));
+            widget.bookName, widget.source, url, oldDetail.nextUrl ?? ''));
 
     // 异步存储当前书架书籍阅读进度
     // 提前传递过来判断是否书架更好
@@ -512,8 +512,8 @@ class _ReadPageState extends State<ReadPage> {
     if (post != null) {
       // post();
       // 优先跳转防止二次构建页面未加载,跳转失败,eg: ScrollController not attached to any scroll views.
-      if (_controller.hasClients) {
-        _controller.jumpTo(0);
+      if (_controller?.hasClients ?? true) {
+        _controller?.jumpTo(0);
       }
     }
     setState(() {});
@@ -527,7 +527,7 @@ class _ReadPageState extends State<ReadPage> {
       ChapterModel chapterResult = ChapterModel.fromJson(result.data);
 
       setState(() {
-        _chapterList = chapterResult.data;
+        _chapterList = chapterResult.data ?? [];
         ChapterService.init(_chapterList);
         // 异步缓存提前加载章节
         ChapterService.cache(
@@ -541,9 +541,9 @@ class _ReadPageState extends State<ReadPage> {
 
 class MenuItem extends StatelessWidget {
   final List<Widget> children;
-  final Function onTap;
+  final GestureTapCallback? onTap;
 
-  MenuItem({this.children, this.onTap});
+  MenuItem({this.children = const [], this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -558,8 +558,8 @@ class MenuItem extends StatelessWidget {
 }
 
 class BgColorItem extends StatelessWidget {
-  final Color color;
-  final Function onTap;
+  final Color? color;
+  final GestureTapCallback? onTap;
 
   BgColorItem({this.color, this.onTap});
 

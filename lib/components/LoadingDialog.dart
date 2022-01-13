@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class LoadingDialog extends Dialog {
-  String text;
+  String? text;
 
-  LoadingDialog({Key key, @required this.text}) : super(key: key);
+  LoadingDialog({Key? key, @required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class LoadingDialog extends Dialog {
                     top: 20.0,
                   ),
                   child: new Text(
-                    text,
+                    text!,
                     style: new TextStyle(fontSize: 12.0),
                   ),
                 ),

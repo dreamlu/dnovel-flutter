@@ -13,14 +13,14 @@ class Shelf {
   String detailUrl;
 
   Shelf(
-      {this.authorName,
-      this.bookName,
-      this.bookDesc,
-      this.bookCoverUrl,
-      this.recentChapterUrl,
-      this.lastUpdateAt,
-      this.source,
-      this.detailUrl});
+      {this.authorName = '',
+      this.bookName = '',
+      this.bookDesc = '',
+      this.bookCoverUrl = '',
+      this.recentChapterUrl = '',
+      this.lastUpdateAt = '',
+      this.source = '',
+      this.detailUrl = ''});
 
   factory Shelf.fromJson(Map<String, dynamic> json) {
     return Shelf(
@@ -74,7 +74,7 @@ class Shelf {
         return s;
       }
     }
-    return null;
+    return Shelf();
   }
 
   // 更新书架阅读的小说阅读的最近章节

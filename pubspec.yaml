@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.16.0-80.1.beta <3.0.0"
 
 dependencies:
   flutter:
@@ -27,13 +27,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  shared_preferences: ^0.5.12+4
+  shared_preferences: ^2.0.12
   http:
-  dio: ^3.0.0
-  flutter_html: ^1.1.1
+  dio: ^4.0.4
+  flutter_html: ^2.2.1
   chewie_audio: ^1.1.1
-  fluttertoast: ^7.1.4 # 再按一次退出提示
-  flutter_screenutil: 4.0.2 # 屏幕适配
+  fluttertoast: ^8.0.8 # 再按一次退出提示
+  flutter_screenutil: ^5.0.3 # 屏幕适配
 #  cached_network_image: ^2.3.3 # ps: 使用会一直卡在构建中why?
 
 dev_dependencies:

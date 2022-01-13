@@ -1,17 +1,17 @@
 class NovelModel {
-  int code;
-  String message;
-  List<Novel> data;
+  late int code;
+  late String message;
+  late List<Novel>? data;
 
-  NovelModel({this.code, this.message, this.data});
+  NovelModel({this.code = 0, this.message = '', this.data});
 
   NovelModel.fromJson(Map<String, dynamic> json) {
     code = json['status'];
     message = json['msg'];
     if (json['data'] != null) {
-      data = new List<Novel>();
+      data = <Novel>[];
       json['data'].forEach((v) {
-        data.add(new Novel.fromJson(v));
+        data?.add(new Novel.fromJson(v));
       });
     }
   }
@@ -25,15 +25,17 @@ class Novel {
   String cover;
   String desc;
 
-  Novel({this.authorName,
-    this.bookName,
-    this.bookUrl,
-    this.source,
-    this.cover,
-    this.desc});
+  Novel(
+      {this.authorName = '',
+      this.bookName = '',
+      this.bookUrl = '',
+      this.source = '',
+      this.cover = '',
+      this.desc = ''});
 
   factory Novel.fromJson(Map<String, dynamic> json) {
-    json['description'] = json['description']?.replaceAll(new RegExp(r"\s+\b|\b\s|\n"), "");
+    json['description'] =
+        json['description']?.replaceAll(new RegExp(r"\s+\b|\b\s|\n"), "");
     return Novel(
       authorName: json['author'],
       bookName: json['name'],

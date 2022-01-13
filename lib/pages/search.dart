@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import './intro.dart';
-import '../models/Hist.dart';
-import '../models/Hot.dart';
 import '../models/Search.dart';
 import '../utils/request.dart';
 import '../utils/color.dart';
@@ -16,7 +13,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List<Hot> _hotList = []; // 热门搜索数据
   List<Search> _novelList = []; // 搜索小说数据
   bool _whetherLoading = false;
 
@@ -49,7 +45,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: MyColor.bgColor,
       brightness: Brightness.light,
@@ -148,12 +144,12 @@ class _SearchPageState extends State<SearchPage> {
       var result = await HttpUtils.getInstance().get('/search?k=$keyword');
       SearchModel searchResult = SearchModel.fromJson(result.data);
 
-      if (searchResult.data.length == 0) {
+      if (searchResult.data?.length == 0) {
         DialogUtils.showToastDialog(context, text: '很遗憾没找到小说~');
       }
 
       setState(() {
-        _novelList = searchResult.data;
+        _novelList = searchResult.data ?? [];
       });
     } catch (e) {
       print(e);
@@ -168,7 +164,7 @@ class _SearchPageState extends State<SearchPage> {
 class NavTitle extends StatelessWidget {
   final String title;
 
-  NavTitle({this.title});
+  NavTitle({this.title = ''});
 
   @override
   Widget build(BuildContext context) {

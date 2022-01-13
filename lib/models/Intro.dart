@@ -1,11 +1,11 @@
 import 'package:dnovel_flutter/models/Chapter.dart';
 
 class IntroModel {
-  int code;
-  String message;
-  Intro data;
+  late int code;
+  late String message;
+  late Intro? data;
 
-  IntroModel({this.code, this.message, this.data});
+  IntroModel({this.code = 0, this.message = '', this.data});
 
   IntroModel.fromJson(Map<String, dynamic> json) {
     code = json['status'];
@@ -27,16 +27,16 @@ class Intro {
   String firstUrl;
 
   Intro(
-      {this.bookName,
-      this.authorName,
-      this.classifyName,
-      this.lastUpdateAt,
-      this.bookDesc,
-      this.recentChapterUrl,
-      this.source,
-      this.cover,
-      this.firstChapter,
-      this.firstUrl});
+      {this.bookName = '',
+      this.authorName = '',
+      this.classifyName = '',
+      this.lastUpdateAt = '',
+      this.bookDesc = '',
+      this.recentChapterUrl = '',
+      this.source = '',
+      this.cover = '',
+      this.firstChapter = '',
+      this.firstUrl = ''});
 
   factory Intro.fromJson(Map<String, dynamic> json) {
     return Intro(

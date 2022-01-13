@@ -2,7 +2,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 // 退出模块
 class Exit {
-  static DateTime _lastPressedAt;
+  static DateTime _lastPressedAt = DateTime.now();
 
   static Future<bool> isExit() async {
     if (_lastPressedAt == null ||

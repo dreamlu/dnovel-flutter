@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 class DetailModel {
-  int code;
-  String message;
-  Detail data;
+  late int code;
+  late String message;
+  late Detail data;
 
-  DetailModel({this.code, this.message, this.data});
+  DetailModel({this.code = 0, this.message = '', required this.data});
 
   DetailModel.fromJson(Map<String, dynamic> json) {
     code = json['status'];
@@ -22,11 +22,11 @@ class Detail {
   String currentUrl;
 
   Detail({
-    this.title,
-    this.content,
-    this.prevUrl,
-    this.nextUrl,
-    this.currentUrl,
+    this.title = '',
+    this.content = '',
+    this.prevUrl = '',
+    this.nextUrl = '',
+    this.currentUrl = '',
   });
 
   factory Detail.fromJson(Map<String, dynamic> json) {

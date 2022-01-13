@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ImageNetwork extends StatefulWidget {
   String src;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final String defImagePath;
-  final Function onTap;
-  final Widget rightTop;
-  final Function rightTopTap;
-  final BoxFit fit;
+  final GestureTapCallback? onTap;
+  final Widget? rightTop;
+  final GestureTapCallback? rightTopTap;
+  final BoxFit? fit;
 
   ImageNetwork(this.src,
       {this.width,
@@ -29,8 +29,8 @@ class ImageNetwork extends StatefulWidget {
 }
 
 class _StateImageWidget extends State<ImageNetwork> {
-  Image _image;
-  bool isDefault;
+  Image? _image;
+  bool isDefault = false;
 
   @override
   void initState() {
@@ -47,10 +47,10 @@ class _StateImageWidget extends State<ImageNetwork> {
       _image = _defaultImage();
       isDefault = true;
     }
-    var resolve = _image.image.resolve(ImageConfiguration.empty);
-    resolve.addListener(ImageStreamListener((_, __) {
+    var resolve = _image?.image.resolve(ImageConfiguration.empty);
+    resolve?.addListener(ImageStreamListener((_, __) {
       //加载成功
-    }, onError: (dynamic exception, StackTrace stackTrace) {
+    }, onError: (dynamic exception, StackTrace? stackTrace) {
       //加载失败
       setState(() {
         widget.src = '';

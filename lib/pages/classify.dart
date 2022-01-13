@@ -41,7 +41,7 @@ class _ClassifyPageState extends State<ClassifyPage> {
         onWillPop: Exit.isExit);
   }
 
-  Widget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar() {
     return AppBar(
       title: Text(
         '书屋',
@@ -144,11 +144,11 @@ class _ClassifyPageState extends State<ClassifyPage> {
       var result = await HttpUtils.getInstance().get('/classify');
       ClassifyModel classifyResult = ClassifyModel.fromJson(result.data);
 
-      String name = classifyResult.data[0].name;
+      String name = classifyResult.data?[0].name ?? '';
       _fetchNovelList(name);
 
       setState(() {
-        _classifyList = classifyResult.data;
+        _classifyList = classifyResult.data!;
         _selectedClassifyName = name;
       });
     } catch (e) {
@@ -170,7 +170,7 @@ class _ClassifyPageState extends State<ClassifyPage> {
         if (novelResult.data == null) {
           novelResult.data = [];
         }
-        _novelList = novelResult.data;
+        _novelList = novelResult.data ?? [];
       });
     } catch (e) {
       print(e);

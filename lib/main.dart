@@ -9,8 +9,7 @@ import './pages/search.dart';
 void main() {
   runApp(ScreenUtilInit(
       designSize: Size(750, 1334),
-      allowFontScaling: false,
-      child: MaterialApp(
+      builder: () => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: '梦阅',
         initialRoute: '/',

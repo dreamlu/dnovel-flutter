@@ -15,14 +15,14 @@ class IntroPage extends StatefulWidget {
   final String url;
   final String source;
 
-  IntroPage({this.url, this.source});
+  IntroPage({this.url = '', this.source = ''});
 
   @override
   State createState() => _IntroPageState();
 }
 
 class _IntroPageState extends State<IntroPage> {
-  Intro _intro;
+  Intro _intro = Intro();
   int isShelf = 0; // 是否在书架
 
   @override
@@ -35,7 +35,7 @@ class _IntroPageState extends State<IntroPage> {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (_intro == null) {
+    if (_intro.source == '') {
       content = Center(child: LoadingView());
     } else {
       content = ListView(
@@ -57,7 +57,7 @@ class _IntroPageState extends State<IntroPage> {
     );
   }
 
-  Widget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: MyColor.bgColor,
       brightness: Brightness.light,
@@ -252,7 +252,7 @@ class _IntroPageState extends State<IntroPage> {
       var result = await HttpUtils.getInstance().get(
           '/info?detail_url=${Uri.encodeComponent(widget.url)}&source=${widget.source}');
       IntroModel introResult = IntroModel.fromJson(result.data);
-      _intro = introResult.data;
+      _intro = introResult.data ?? Intro();
 
       // 如果没有第一章,则直接从最新章节开始
       if (_intro.firstUrl != '') {
@@ -261,11 +261,9 @@ class _IntroPageState extends State<IntroPage> {
 
       // 初始化时判断是否在书架
       // 将书架阅读的最近url覆盖
-      Shelf shelf = await Shelf.isExist(introResult.data.bookName);
-      if (shelf != null) {
-        isShelf = 1;
-        _intro.recentChapterUrl = shelf.recentChapterUrl;
-      }
+      Shelf shelf = await Shelf.isExist(introResult.data?.bookName ?? '');
+      isShelf = 1;
+      _intro.recentChapterUrl = shelf.recentChapterUrl;
       setState(() {});
     } catch (e) {
       print(e);
@@ -288,6 +286,7 @@ class _IntroPageState extends State<IntroPage> {
       print(e);
       return false;
     }
+    return false;
   }
 
   bool isExist(List<Shelf> list) {

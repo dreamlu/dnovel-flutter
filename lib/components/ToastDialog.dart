@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ToastDialog extends Dialog {
   String text;
 
-  ToastDialog({Key key, @required this.text}) : super(key: key);
+  ToastDialog({Key? key, required this.text}) : super(key: key);
 
   @override
   Widget build (BuildContext context) {

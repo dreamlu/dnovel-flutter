@@ -8,15 +8,15 @@ class NovelItem extends StatelessWidget {
   final String bookCoverUrl;
   final String desc;
 
-  final Function onTap;
+  final GestureTapCallback? onTap;
 
   NovelItem(
-      {this.bookName,
-      this.authorName,
+      {this.bookName = '',
+      this.authorName = '',
       this.source = '',
-      this.bookCoverUrl,
+      this.bookCoverUrl = '',
       this.onTap,
-      this.desc});
+      this.desc = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,13 @@ class NovelItem extends StatelessWidget {
   Widget _buildShelfItem(BuildContext context) {
     List<Widget> content = [];
     var img;
-    if (bookCoverUrl == null || bookCoverUrl == "") {
+    if (bookCoverUrl == "") {
       img = Image.asset("lib/images/empty.png");
     } else {
       try {
         img = ClipRRect(
           borderRadius: BorderRadius.circular(4),
-          child: Image.network(bookCoverUrl),
+          child: Image.network(bookCoverUrl!),
         ); // CachedNetworkImage(imageUrl: novel.bookCoverUrl); //Image.network(novel.bookCoverUrl);
       } catch (e) {
         img = Image.asset("lib/images/empty.png");

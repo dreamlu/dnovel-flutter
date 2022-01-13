@@ -57,7 +57,7 @@ class _ShelfPageState extends State<ShelfPage> {
     _fetchShelfList();
   }
 
-  Widget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar() {
     List<Widget> actions = [];
     if (_shelfList.length > 0) {
       actions.add(FlatButton(
