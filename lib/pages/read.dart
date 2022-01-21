@@ -292,7 +292,7 @@ class _ReadPageState extends State<ReadPage> {
 
   Widget _buildFooter() {
     return Container(
-      height: 70.0.h,
+      height: 90.0.h,
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: Colors.black26)),
       ),
