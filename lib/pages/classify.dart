@@ -1,4 +1,3 @@
-import 'package:dnovel_flutter/utils/exit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './intro.dart';
@@ -28,18 +27,16 @@ class _ClassifyPageState extends State<ClassifyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        child: Scaffold(
-          appBar: _buildAppBar(),
-          body: Container(
-            color: MyColor.bgColor,
-            child: Column(children: [
-              _buildClassifyList(),
-              _buildNovelList(),
-            ]),
-          ),
-        ),
-        onWillPop: Exit.isExit);
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Container(
+        color: MyColor.bgColor,
+        child: Column(children: [
+          _buildClassifyList(),
+          _buildNovelList(),
+        ]),
+      ),
+    );
   }
 
   PreferredSizeWidget _buildAppBar() {
@@ -49,7 +46,8 @@ class _ClassifyPageState extends State<ClassifyPage> {
         style: TextStyle(color: MyColor.appBarTitle),
       ),
       backgroundColor: MyColor.bgColor,
-      systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
+      systemOverlayStyle:
+          SystemUiOverlayStyle(statusBarBrightness: Brightness.light),
       elevation: 0,
       actions: <Widget>[
         IconButton(

@@ -245,7 +245,7 @@ class _ReadPageState extends State<ReadPage> {
                   Expanded(child: GestureDetector(
                     onTap: () {
                       double value =
-                          _controller?.offset ?? 0 - ctx.size!.height;
+                          _controller!.offset - ctx.size!.height;
                       if (value < 0) {
                         value = 0;
                       }
@@ -272,7 +272,7 @@ class _ReadPageState extends State<ReadPage> {
                   Expanded(child: GestureDetector(
                     onTap: () {
                       double value =
-                          _controller?.offset ?? 0 + ctx.size!.height;
+                          _controller!.offset + ctx.size!.height;
                       if (value < 0) {
                         value = 0;
                       }

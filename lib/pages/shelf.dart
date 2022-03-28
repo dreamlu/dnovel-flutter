@@ -1,5 +1,4 @@
 import 'package:dnovel_flutter/utils/global/global.dart';
-import 'package:dnovel_flutter/utils/exit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,17 +40,15 @@ class _ShelfPageState extends State<ShelfPage> {
       }
     }
 
-    return WillPopScope(
-        child: Scaffold(
-          appBar: _buildAppBar(),
-          body: RefreshIndicator(
-              onRefresh: _onRefresh,
-              child: Container(
-                color: MyColor.bgColor,
-                child: content,
-              )),
-        ),
-        onWillPop: Exit.isExit);
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: Container(
+            color: MyColor.bgColor,
+            child: content,
+          )),
+    );
   }
 
   Future<Null> _onRefresh() async {
