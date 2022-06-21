@@ -8,6 +8,7 @@ class Shelf {
   String bookDesc;
   String bookCoverUrl;
   String recentChapterUrl;
+  String recentChapterTitle;
   String lastUpdateAt;
   String source;
   String detailUrl;
@@ -18,6 +19,7 @@ class Shelf {
       this.bookDesc = '',
       this.bookCoverUrl = '',
       this.recentChapterUrl = '',
+      this.recentChapterTitle = '',
       this.lastUpdateAt = '',
       this.source = '',
       this.detailUrl = ''});
@@ -29,6 +31,7 @@ class Shelf {
       bookDesc: json['book_desc'],
       bookCoverUrl: json['book_cover_url'],
       recentChapterUrl: json['recent_chapter_url'],
+      recentChapterTitle: json['recent_chapter_title'],
       lastUpdateAt: json['last_update_at'],
       source: json['source'],
       detailUrl: json['detail_url'],
@@ -40,6 +43,7 @@ class Shelf {
         'book_name': bookName,
         'book_desc': bookDesc,
         'recent_chapter_url': recentChapterUrl,
+        'recent_chapter_title': recentChapterTitle,
         'source': source,
         "detail_url": detailUrl,
         "book_cover_url": bookCoverUrl,
@@ -57,6 +61,7 @@ class Shelf {
         bookName: e['book_name'],
         bookDesc: e['book_desc'],
         recentChapterUrl: e['recent_chapter_url'],
+        recentChapterTitle: e['recent_chapter_title']??'',
         source: e['source'],
         detailUrl: e['detail_url'],
         bookCoverUrl: e['book_cover_url'],
@@ -78,13 +83,14 @@ class Shelf {
   }
 
   // 更新书架阅读的小说阅读的最近章节
-  static Future upRecentChapterUrl(bookName, recentUrl) async {
+  static Future upRecentChapterUrl(bookName, recentUrl, recentTitle) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<Shelf> list = toList(prefs.get("shelfList"));
     for (int i = 0; i < list.length; i++) {
       var s = list[i];
       if (s.bookName == bookName) {
         s.recentChapterUrl = recentUrl;
+        s.recentChapterTitle = recentTitle;
         list.removeAt(i);
         list.insert(i, s);
         prefs.setString("shelfList", jsonEncode(list));

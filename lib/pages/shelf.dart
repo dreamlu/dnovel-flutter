@@ -1,3 +1,4 @@
+import 'package:dnovel_flutter/components/ImageNetwork.dart';
 import 'package:dnovel_flutter/utils/global/global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -123,28 +124,26 @@ class _ShelfPageState extends State<ShelfPage> {
   // 书架列表item构建
   Widget _buildShelfItem(Shelf novel) {
     List<Widget> content = [];
-    var img;
-    if (novel.bookCoverUrl == "") {
-      img = Image.asset("lib/images/cover.png");
-    } else {
-      try {
-        img = ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: Image.network(novel.bookCoverUrl),
-        ); // CachedNetworkImage(imageUrl: novel.bookCoverUrl); //Image.network(novel.bookCoverUrl);
-      } catch (e) {
-        img = Image.asset("lib/images/cover.png");
-      }
-    }
     content.add(
       // NovelItem(bookName: novel.bookName, authorName: novel.authorName),
       ListTile(
-        leading: img,
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: ImageNetwork(novel.bookCoverUrl),
+        ),
         title:
             Text(novel.bookName, style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Row(children: [
-          Expanded(child: Text("作者: " + novel.authorName)),
-          Text("来源: " + novel.source, style: TextStyle(color: Colors.black26)),
+        subtitle:
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(children: [
+            Expanded(child: Text("作者: " + novel.authorName)),
+            Text("来源: " + novel.source,
+                style: TextStyle(color: Colors.black26)),
+          ]),
+          Text("阅读进度: " + (novel.recentChapterTitle == ''?'还未阅读':novel.recentChapterTitle),
+              style: TextStyle(color: Colors.black12,fontSize: 20.sp),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis),
         ]),
         // trailing: Icon(Icons.chevron_right),
         // tileColor: Coll,

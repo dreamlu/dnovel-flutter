@@ -244,8 +244,7 @@ class _ReadPageState extends State<ReadPage> {
                 children: [
                   Expanded(child: GestureDetector(
                     onTap: () {
-                      double value =
-                          _controller!.offset - ctx.size!.height;
+                      double value = _controller!.offset - ctx.size!.height;
                       if (value < 0) {
                         value = 0;
                       }
@@ -271,8 +270,7 @@ class _ReadPageState extends State<ReadPage> {
                   ),
                   Expanded(child: GestureDetector(
                     onTap: () {
-                      double value =
-                          _controller!.offset + ctx.size!.height;
+                      double value = _controller!.offset + ctx.size!.height;
                       if (value < 0) {
                         value = 0;
                       }
@@ -485,7 +483,7 @@ class _ReadPageState extends State<ReadPage> {
 
     // 异步存储当前书架书籍阅读进度
     // 提前传递过来判断是否书架更好
-    Shelf.upRecentChapterUrl(widget.bookName, url);
+    Shelf.upRecentChapterUrl(widget.bookName, url, _detail?.title);
     if (post != null) {
       // post();
       // 优先跳转防止二次构建页面未加载,跳转失败,eg: ScrollController not attached to any scroll views.
