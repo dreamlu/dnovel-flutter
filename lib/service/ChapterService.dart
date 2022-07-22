@@ -7,7 +7,7 @@ import 'package:dnovel_flutter/utils/request.dart';
 List<Detail> list = []; // 缓存列表
 List<Chapter> chapterList = []; // 章节列表
 const int cacheNum = 6; // 缓存数量
-const int cacheLeftNum = 4; // 缓存剩余数量时开启再次缓存
+const int cacheLeftNum = 5; // 缓存剩余数量时开启再次缓存
 
 // 全局缓存服务
 class ChapterService {
@@ -32,14 +32,14 @@ class ChapterService {
 
     // 判断是否需要缓存
     int oldIndex = list.indexWhere((e) => e.currentUrl == service.currentUrl);
-    if (oldIndex <= list.length - cacheLeftNum) {
-      return;
-    }
-
-    // 清除早期缓存
     if (oldIndex != -1) {
+      // 清除早期缓存
       for (int i = oldIndex - 4; i >= 0; i--) {
         list.removeAt(i);
+      }
+      oldIndex = list.indexWhere((e) => e.currentUrl == service.currentUrl);
+      if (oldIndex <= list.length - cacheLeftNum) {
+        return;
       }
     }
 
@@ -66,20 +66,13 @@ class ChapterService {
   /// 获得缓存内容
   static Future<Detail> getNextChapter(
       Detail detail, String url, String source, ChapterService service) async {
-    if (detail.title == '') {
-      cache(service);
-      return await getChapter(url, source);
-    } else {
-      // 1.查找缓存
-      int index = list.indexWhere((element) => element.currentUrl == url);
-      if (index >= 0) {
-        Detail res = list[index];
-        cache(service);
-        return res;
-      } else {
-        return getNextChapter(Detail(), url, source, service);
-      }
+    cache(service); // 无论是否命中进行缓存逻辑
+    // 1.查找缓存
+    int index = list.indexWhere((element) => element.currentUrl == url);
+    if (index >= 0) {
+      return list[index];
     }
+    return await getChapter(url, source);
   }
 
   /// 在线请求章节内容

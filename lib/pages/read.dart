@@ -479,7 +479,7 @@ class _ReadPageState extends State<ReadPage> {
     }
 
     _detail = await ChapterService.getNextChapter(oldDetail, url, widget.source,
-        ChapterService(widget.bookName, widget.source, url, oldDetail.nextUrl));
+        ChapterService(widget.bookName, widget.source, url, url));
 
     // 异步存储当前书架书籍阅读进度
     // 提前传递过来判断是否书架更好
