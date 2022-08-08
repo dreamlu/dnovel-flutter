@@ -34,6 +34,8 @@ dependencies:
   chewie_audio: ^1.1.1
   fluttertoast: ^8.0.8 # 再按一次退出提示
   flutter_screenutil: ^5.0.3 # 屏幕适配
+  chewie: 1.3.4
+  video_player: 2.4.4
 #  cached_network_image: ^2.3.3 # ps: 使用会一直卡在构建中why?
 
 dev_dependencies:

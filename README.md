@@ -17,11 +17,11 @@ dnovel 是一个简洁，干净的小说聚合系统
 ![界面](lib/images/dnovel_qrcode.jpeg)  
 
 ### 开发  
-1.flutter 2.9  
+1.flutter 3.3.0   
 2.修改`lib/utils/request.dart`中api路径为搭建的上述后端地址api  
 
-## TODO
-- [ ] 导出弹窗/剪切板
+## TODO  
+- [ ] 导出弹窗/剪切板  
 - [x] 实时记录书架相关书籍阅读位置或章节  
 
 ### 模块
