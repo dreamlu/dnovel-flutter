@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dnovel_flutter/utils/request.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Shelf {
@@ -56,15 +57,21 @@ class Shelf {
     var map = jsonDecode(stringJson);
     List<Shelf> shelfList = [];
     map.forEach((e) {
+      // todo 待移除,书架beqegecc图片403处理
+      String cover = e['book_cover_url'];
+      if (!cover.contains("/file?url")) {
+        cover = HttpUtils.API_PREFIX + "/file?url=" + cover;
+      }
+
       shelfList.add(Shelf(
         authorName: e['author_name'],
         bookName: e['book_name'],
         bookDesc: e['book_desc'],
         recentChapterUrl: e['recent_chapter_url'],
-        recentChapterTitle: e['recent_chapter_title']??'',
+        recentChapterTitle: e['recent_chapter_title'] ?? '',
         source: e['source'],
         detailUrl: e['detail_url'],
-        bookCoverUrl: e['book_cover_url'],
+        bookCoverUrl: cover,
       ));
     });
     return shelfList;

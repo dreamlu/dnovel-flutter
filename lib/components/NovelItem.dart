@@ -1,3 +1,4 @@
+import 'package:dnovel_flutter/components/ImageNetwork.dart';
 import 'package:dnovel_flutter/utils/extension/extension.dart';
 import 'package:flutter/material.dart';
 
@@ -25,19 +26,10 @@ class NovelItem extends StatelessWidget {
 
   Widget _buildShelfItem(BuildContext context) {
     List<Widget> content = [];
-    var img;
-    if (bookCoverUrl == "") {
-      img = Image.asset("lib/images/empty.png");
-    } else {
-      try {
-        img = ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: Image.network(bookCoverUrl),
-        ); // CachedNetworkImage(imageUrl: novel.bookCoverUrl); //Image.network(novel.bookCoverUrl);
-      } catch (e) {
-        img = Image.asset("lib/images/empty.png");
-      }
-    }
+    var img = ClipRRect(
+      borderRadius: BorderRadius.circular(4),
+      child: ImageNetwork(bookCoverUrl),
+    );
 
     content.add(
       // NovelItem(bookName: novel.bookName, authorName: novel.authorName),
